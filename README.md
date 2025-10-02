@@ -12,8 +12,10 @@ los autobuses urbanos y los tiempos de espera en cada parada.
 - ⚙️ Arquitectura basada en React Native + Expo con TypeScript y navegación mediante
   `@react-navigation/native`.
 
-> Los datos de ejemplo incluidos se generan a través de un servicio simulado en
-> `src/services/mockApi.ts` hasta que se integren los datos oficiales en tiempo real.
+La app consume datos en tiempo real publicados por el Ayuntamiento de Cádiz a través del portal
+[`urbanos`](http://77.224.241.76/urbanos/) (servicios `Presenter.aspx` y `PresenterService.asmx`).
+En `src/services/cadizApi.ts` se encapsula la obtención de vehículos y estimaciones de llegada
+para las líneas 1, 2, 3, 5 y 7, junto con un pequeño conjunto de paradas representativas.
 
 ## Requisitos previos
 
