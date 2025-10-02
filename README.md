@@ -44,7 +44,7 @@ npm run lint     # Ejecuta ESLint sobre el proyecto
 │   ├── components           # Componentes UI reutilizables (mapa, listados, etc.)
 │   ├── hooks                # Hooks reutilizables (useBusData)
 │   ├── screens              # Pantallas principales
-│   ├── services             # Integraciones con APIs (datos reales de Cádiz)
+│   ├── services             # Integraciones con APIs (mock incluida)
 │   ├── theme                # Tokens de diseño reutilizables
 │   └── types                # Definiciones TypeScript compartidas
 └── assets                   # Recursos gráficos (iconos, splash, ...)
@@ -52,9 +52,10 @@ npm run lint     # Ejecuta ESLint sobre el proyecto
 
 ## Próximos pasos sugeridos
 
-1. Permitir al usuario seleccionar paradas y líneas favoritas dinámicamente.
-2. Integrar notificaciones push para avisos de llegada o incidencias.
-3. Añadir soporte offline y cacheado de rutas frecuentes.
+1. Sustituir el servicio simulado por la API oficial de datos en tiempo real.
+2. Añadir gestión de favoritos para paradas y líneas.
+3. Integrar notificaciones push para avisos de llegada o incidencias.
+4. Añadir soporte offline y cacheado de rutas frecuentes.
 
 ---
 

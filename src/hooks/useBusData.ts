@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { BusDataSnapshot } from '@/types/bus';
-import { fetchBusData } from '@/services/cadizApi';
+import { fetchBusData } from '@/services/mockApi';
 
 const DEFAULT_REFRESH_INTERVAL = 15000;
 
