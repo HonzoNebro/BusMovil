@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { BusDataSnapshot } from '@/types/bus';
-import { fetchBusData } from '@/services/mockApi';
+import { fetchBusData } from '@/services/cadizApi';
 
-const DEFAULT_REFRESH_INTERVAL = 15000;
+const DEFAULT_REFRESH_INTERVAL = 60000;
 
 type RefreshTimer = ReturnType<typeof setInterval> | null;
 
