@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { BusDataSnapshot } from '@/types/bus';
-import { fetchBusData } from '@/services/cadizApi';
+import { favouriteStops, fetchBusData } from '@/services/cadizApi';
 
 const DEFAULT_REFRESH_INTERVAL = 60000;
 
@@ -19,18 +19,36 @@ export function useBusData(refreshInterval = DEFAULT_REFRESH_INTERVAL): UseBusDa
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | undefined>();
   const refreshTimer = useRef<RefreshTimer>(null);
+  const loading = useRef(false);
+  const mounted = useRef(true);
 
   const loadData = useCallback(async () => {
+    if (loading.current) return;
+    loading.current = true;
     try {
       setIsLoading(true);
       const data = await fetchBusData();
-      setSnapshot(data);
-      setError(undefined);
+      if (!mounted.current) return;
+      setSnapshot((previous) => ({
+        ...data,
+        arrivals: [...data.arrivals, ...(previous?.arrivals ?? []).filter(
+          (arrival) => data.failedStopIds.includes(arrival.stopId)
+        )]
+      }));
+      setError(data.failedStopIds.length
+        ? 'Actualización parcial. Algunas paradas no se pudieron consultar; sus datos anteriores pueden estar desactualizados.'
+        : undefined);
     } catch (err) {
       console.error('Error fetching bus data', err);
-      setError('No se pudieron actualizar los datos en tiempo real.');
+      if (!mounted.current) return;
+      setSnapshot((previous) => previous ? {
+        ...previous,
+        failedStopIds: [...new Set(favouriteStops.map((stop) => stop.stopId))]
+      } : null);
+      setError('No se pudieron actualizar los datos en tiempo real. Comprueba la conexión. Los datos anteriores pueden estar desactualizados.');
     } finally {
-      setIsLoading(false);
+      loading.current = false;
+      if (mounted.current) setIsLoading(false);
     }
   }, []);
 
@@ -39,7 +57,9 @@ export function useBusData(refreshInterval = DEFAULT_REFRESH_INTERVAL): UseBusDa
   }, [loadData]);
 
   useEffect(() => {
+    mounted.current = true;
     void loadData();
+    return () => { mounted.current = false; };
   }, [loadData]);
 
   useEffect(() => {

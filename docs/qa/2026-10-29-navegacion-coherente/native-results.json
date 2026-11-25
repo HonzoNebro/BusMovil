@@ -1,0 +1,17 @@
+{
+  "menuToggle": "PASS",
+  "internalTimetableFromMap": "PASS",
+  "timetableFromStopAndReturn": "PASS",
+  "stopToMapToMain": "PASS",
+  "fixedMiniMap": "PASS: se desplaza la ficha; el marcador conserva su posición relativa dentro del minimapa",
+  "visualReview": {
+    "status": "PASS",
+    "evidence": [
+      "ficha-simplificada.png",
+      "desplazamiento-sobre-minimapa.png",
+      "frecuencias-internas.png",
+      "salidas-internas.png",
+      "consulta-desde-parada.png"
+    ]
+  }
+}

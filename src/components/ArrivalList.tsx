@@ -1,14 +1,47 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useLanguage } from '@/i18n/Language';
+import { distanceLabel } from '@/services/distanceLabel';
+import { Text, Pressable } from '@/i18n/Primitives';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
+import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
 
+import {
+  findNearbyStop,
+  isFreshPosition,
+  type NearbyStopResult,
+  type UserPosition
+} from '@/services/walkingStops';
 import type { BusStopArrival } from '@/types/bus';
-import { cadizLines } from '@/services/cadizApi';
-import { theme } from '@/theme';
+import { cadizLines, stopMetadata } from '@/services/cadizApi';
+import { lineColors, lineTextColor, Theme, useAppTheme } from '@/theme';
 
+export interface ArrivalSelection {
+  stopId: string;
+  stopName: string;
+  line: string;
+  directionId: string;
+}
 interface Props {
   arrivals: BusStopArrival[];
-  focusStopId?: string;
+  userPosition?: UserPosition;
+  onRequestUserPosition?: () => Promise<UserPosition | undefined>;
+  onSelectNearbyStop?: (stopId: string) => void;
+  dataError?: string;
+  onRefresh?: () => void;
+  onRevealStop?: (node: View) => void;
+  focusRequest?: { id: number; stopId: string; directionId?: string };
   linePriority?: string[];
+  staleStopIds?: string[];
+  onFocusStop?: (node: View) => void;
+  onCancelFocus?: () => void;
+  onManualSelectStop?: (stopId: string) => void;
+  onSelectionChange?: (selection: ArrivalSelection) => void;
+  isLoading?: boolean;
 }
 
 interface StopLineArrivals {
@@ -34,12 +67,6 @@ interface LineSection {
   directions: DirectionSection[];
 }
 
-interface NextArrivalSummary {
-  arrival: BusStopArrival;
-  stopId: string;
-  stopName: string;
-}
-
 const arrivalsKey = (line: string, directionId: string, stopId: string) =>
   `${line}:${directionId}:${stopId}`;
 
@@ -56,8 +83,6 @@ const directionSchedules: Record<string, { start: string; end: string }> = {
   '7-simon-bolivar': { start: '07:00', end: '21:40' }
 };
 
-const limitedOperationStops = new Set(['9905', '1901']);
-
 function parseTimeToMinutes(time: string): number {
   const [hours, minutes] = time.split(':').map(Number);
   if (Number.isNaN(hours) || Number.isNaN(minutes)) {
@@ -66,7 +91,10 @@ function parseTimeToMinutes(time: string): number {
   return hours * 60 + minutes;
 }
 
-function isWithinSchedule(nowMinutes: number, schedule?: { start: string; end: string }): boolean {
+function isWithinSchedule(
+  nowMinutes: number,
+  schedule?: { start: string; end: string }
+): boolean {
   if (!schedule) {
     return true;
   }
@@ -94,613 +122,1154 @@ function formatArrivalLabel(
   arrival: BusStopArrival,
   schedule: { start: string; end: string } | undefined,
   now: Date,
-  nowMinutes: number
+  nowMinutes: number,
+  stale = false
 ): string {
+  if (stale) {
+    return `Dato anterior: ${arrival.arrivalInMinutes} min (consulta ${new Date(
+      arrival.observedAt
+    ).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })})`;
+  }
   if (schedule && !isWithinSchedule(nowMinutes, schedule)) {
     return schedule.start;
   }
 
   if (arrival.arrivalInMinutes >= 31) {
-    return formatAbsoluteTime(arrival.arrivalInMinutes, now);
+    return formatAbsoluteTime(
+      arrival.arrivalInMinutes,
+      new Date(arrival.observedAt)
+    );
   }
 
   return `${arrival.arrivalInMinutes} min`;
 }
 
-function formatDirectionSummary(
-  nextArrival: NextArrivalSummary | undefined,
-  schedule: { start: string; end: string } | undefined,
-  now: Date,
-  nowMinutes: number
-): string {
-  if (schedule && !isWithinSchedule(nowMinutes, schedule)) {
-    return `Primer servicio ${schedule.start}`;
-  }
-
-  if (!nextArrival) {
-    return 'No hay autobuses planificados';
-  }
-
-  const { arrival, stopName } = nextArrival;
-
-  if (arrival.arrivalInMinutes >= 31) {
-    return `${formatAbsoluteTime(arrival.arrivalInMinutes, now)} · ${stopName}`;
-  }
-
-  return `${arrival.arrivalInMinutes} min · ${stopName}`;
-}
-
 function groupArrivals(arrivals: BusStopArrival[]): LineSection[] {
-  const arrivalsByConfigKey = arrivals.reduce<Map<string, BusStopArrival[]>>((acc, arrival) => {
-    const key = arrivalsKey(arrival.configuredLine, arrival.directionId, arrival.stopId);
-    if (!acc.has(key)) {
-      acc.set(key, []);
-    }
-    acc.get(key)?.push(arrival);
-    return acc;
-  }, new Map());
+  const arrivalsByConfigKey = arrivals.reduce<Map<string, BusStopArrival[]>>(
+    (acc, arrival) => {
+      const key = arrivalsKey(
+        arrival.configuredLine,
+        arrival.directionId,
+        arrival.stopId
+      );
+      if (!acc.has(key)) {
+        acc.set(key, []);
+      }
+      acc.get(key)?.push(arrival);
+      return acc;
+    },
+    new Map()
+  );
 
-  return cadizLines
-    .map((lineConfig) => {
-      const directions = lineConfig.directions.map((directionConfig) => {
-        const stops = directionConfig.stops.map((stopConfig) => {
-          const key = arrivalsKey(lineConfig.line, directionConfig.id, stopConfig.stopId);
-          const rawArrivals = (arrivalsByConfigKey.get(key) ?? [])
-            .slice()
-            .sort((a, b) => a.arrivalInMinutes - b.arrivalInMinutes);
+  return cadizLines.map((lineConfig) => {
+    const directions = lineConfig.directions.map((directionConfig) => {
+      const stops = directionConfig.stops.map((stopConfig) => {
+        const key = arrivalsKey(
+          lineConfig.line,
+          directionConfig.id,
+          stopConfig.stopId
+        );
+        const rawArrivals = (arrivalsByConfigKey.get(key) ?? [])
+          .slice()
+          .sort((a, b) => a.arrivalInMinutes - b.arrivalInMinutes);
 
-          const seenArrivals = new Set<string>();
-          const stopArrivals = rawArrivals.filter((arrival) => {
-            const dedupeKey = [
-              arrival.line,
-              arrival.directionId,
-              arrival.directionName,
-              arrival.configuredLine,
-              arrival.stopId,
-              arrival.stopName,
-              arrival.destination,
-              arrival.arrivalInMinutes
-            ].join('|');
+        const seenArrivals = new Set<string>();
+        const stopArrivals = rawArrivals.filter((arrival) => {
+          const dedupeKey = [
+            arrival.line,
+            arrival.directionId,
+            arrival.directionName,
+            arrival.configuredLine,
+            arrival.stopId,
+            arrival.stopName,
+            arrival.destination,
+            arrival.arrivalInMinutes
+          ].join('|');
 
-            if (seenArrivals.has(dedupeKey)) {
-              return false;
-            }
+          if (seenArrivals.has(dedupeKey)) {
+            return false;
+          }
 
-            seenArrivals.add(dedupeKey);
-            return true;
-          });
-
-          const arrivalsByActualLine = stopArrivals.reduce<Map<string, BusStopArrival[]>>(
-            (acc, arrival) => {
-              if (!acc.has(arrival.line)) {
-                acc.set(arrival.line, []);
-              }
-              acc.get(arrival.line)?.push(arrival);
-              return acc;
-            },
-            new Map()
-          );
-
-          const primaryArrivals = (arrivalsByActualLine.get(lineConfig.line) ?? []).slice(0, 3);
-
-          const otherLineArrivals = Array.from(arrivalsByActualLine.entries())
-            .filter(([actualLine]) => actualLine !== lineConfig.line)
-            .map(([actualLine, items]) => ({
-              line: actualLine,
-              arrivals: items.slice(0, 3)
-            }))
-            .sort((a, b) => a.line.localeCompare(b.line, 'es', { numeric: true }));
-
-          return {
-            stopId: stopConfig.stopId,
-            stopName: stopConfig.label,
-            primaryArrivals,
-            otherLineArrivals
-          };
+          seenArrivals.add(dedupeKey);
+          return true;
         });
 
+        const arrivalsByActualLine = stopArrivals.reduce<
+          Map<string, BusStopArrival[]>
+        >((acc, arrival) => {
+          if (!acc.has(arrival.line)) {
+            acc.set(arrival.line, []);
+          }
+          acc.get(arrival.line)?.push(arrival);
+          return acc;
+        }, new Map());
+
+        const primaryArrivals = (
+          arrivalsByActualLine.get(lineConfig.line) ?? []
+        ).slice(0, 3);
+
+        const otherLineArrivals = Array.from(arrivalsByActualLine.entries())
+          .filter(([actualLine]) => actualLine !== lineConfig.line)
+          .map(([actualLine, items]) => ({
+            line: actualLine,
+            arrivals: items.slice(0, 3)
+          }))
+          .sort((a, b) =>
+            a.line.localeCompare(b.line, 'es', { numeric: true })
+          );
+
         return {
-          directionId: directionConfig.id,
-          directionName: directionConfig.name,
-          stops
+          stopId: stopConfig.stopId,
+          stopName: stopConfig.label,
+          primaryArrivals,
+          otherLineArrivals
         };
       });
 
       return {
-        line: lineConfig.line,
-        directions
+        directionId: directionConfig.id,
+        directionName: directionConfig.name,
+        stops
       };
-    })
-    .filter((section) =>
-      section.directions.some((direction) =>
-        direction.stops.some(
-          (stop) => stop.primaryArrivals.length || stop.otherLineArrivals.length
-        )
-      )
-    );
-}
-
-function pickNextArrival(
-  direction: DirectionSection,
-  schedule: { start: string; end: string } | undefined,
-  nowMinutes: number
-): NextArrivalSummary | undefined {
-  if (schedule && !isWithinSchedule(nowMinutes, schedule)) {
-    return undefined;
-  }
-
-  const pickBestArrival = (
-    arrivals: BusStopArrival[] | undefined,
-    stopId: string
-  ): BusStopArrival | undefined => {
-    if (!arrivals?.length) {
-      return undefined;
-    }
-
-    for (const arrival of arrivals) {
-      if (limitedOperationStops.has(stopId) && arrival.arrivalInMinutes > 30) {
-        continue;
-      }
-
-      return arrival;
-    }
-
-    return undefined;
-  };
-
-  for (const stop of direction.stops) {
-    const bestArrival = pickBestArrival(stop.primaryArrivals, stop.stopId);
-    if (!bestArrival) {
-      continue;
-    }
+    });
 
     return {
-      arrival: bestArrival,
-      stopId: stop.stopId,
-      stopName: stop.stopName
+      line: lineConfig.line,
+      directions
     };
-  }
-
-  return undefined;
+  });
 }
 
-export function ArrivalList({ arrivals, focusStopId, linePriority }: Props): JSX.Element {
+export function ArrivalList({
+  arrivals,
+  focusRequest,
+  linePriority,
+  staleStopIds = [],
+  onFocusStop,
+  onCancelFocus,
+  userPosition,
+  onRequestUserPosition,
+  onSelectNearbyStop,
+  onSelectionChange,
+  onManualSelectStop,
+  onRevealStop,
+  onRefresh,
+  dataError,
+  isLoading = false
+}: Props): JSX.Element {
+  const { locale } = useLanguage();
+  const theme = useAppTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const sections = useMemo(() => groupArrivals(arrivals), [arrivals]);
-  const [selectedLine, setSelectedLine] = useState<string | undefined>();
-  const [selectedDirection, setSelectedDirection] = useState<string | undefined>();
-  const [expandedStops, setExpandedStops] = useState<Record<string, boolean>>({});
+  const staleIds = useMemo(() => new Set(staleStopIds), [staleStopIds]);
+  const [selectedLine, setSelectedLine] = useState<string | undefined>('1');
+  const [selectedDirection, setSelectedDirection] = useState<
+    string | undefined
+  >('1-cortadura');
+  const [selectedStopId, setSelectedStopId] = useState('1101');
+  const [showAllStops, setShowAllStops] = useState(false);
+  const [expandedStops, setExpandedStops] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [nearbyAccess, setNearbyAccess] = useState<NearbyStopResult>();
+  const [directionLookup, setDirectionLookup] = useState<
+    'locating' | 'routing' | 'error'
+  >();
+  const directionGeneration = useRef(0);
+  const directionController = useRef<AbortController>();
+  useEffect(
+    () => () => {
+      ++directionGeneration.current;
+      directionController.current?.abort();
+    },
+    []
+  );
+  const consumedFocus = useRef<number>();
+  const pendingScroll = useRef<number>();
+  const heroRef = useRef<View>(null);
+  const selectedRowRef = useRef<View>(null);
+  const pendingReveal = useRef<number>();
+  const revealSequence = useRef(0);
   const now = new Date();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
   const linePriorityOrder = useMemo(
-    () => (linePriority && linePriority.length ? [...linePriority] : ['1', '2', '3', '5', '7']),
+    () => (linePriority?.length ? linePriority : ['1', '2', '3', '5', '7']),
     [linePriority]
   );
-  const autoFocusRef = useRef<string | undefined>();
-
-  const selectedLineSection = selectedLine
-    ? sections.find((section) => section.line === selectedLine)
-    : undefined;
-  const selectedDirectionSection = selectedLineSection && selectedDirection
-    ? selectedLineSection.directions.find((direction) => direction.directionId === selectedDirection)
-    : undefined;
-
-  useEffect(() => {
-    if (!focusStopId || !sections.length) {
-      return;
-    }
-
-    if (
-      autoFocusRef.current === focusStopId &&
-      selectedLineSection &&
-      selectedDirectionSection &&
-      selectedDirectionSection.stops.some((stop) => stop.stopId === focusStopId)
-    ) {
-      return;
-    }
-
-    const findSectionForLine = (line: string) =>
-      sections.find(
-        (section) =>
-          section.line === line &&
-          section.directions.some((direction) =>
-            direction.stops.some((stop) => stop.stopId === focusStopId)
-          )
-      );
-
-    const lineCandidate =
-      linePriorityOrder
-        .map((line) => findSectionForLine(line))
-        .find((section): section is LineSection => Boolean(section)) ??
-      sections.find((section) =>
-        section.directions.some((direction) =>
-          direction.stops.some((stop) => stop.stopId === focusStopId)
-        )
-      );
-
-    if (!lineCandidate) {
-      return;
-    }
-
-    const directionCandidate = lineCandidate.directions.find((direction) =>
-      direction.stops.some((stop) => stop.stopId === focusStopId)
-    );
-
-    if (!directionCandidate) {
-      return;
-    }
-
-    setSelectedLine(lineCandidate.line);
-    setSelectedDirection(directionCandidate.directionId);
-    setExpandedStops({
-      [`${lineCandidate.line}:${directionCandidate.directionId}:${focusStopId}`]: true
+  const line = sections.find((item) => item.line === selectedLine);
+  const direction = line?.directions.find(
+    (item) => item.directionId === selectedDirection
+  );
+  const currentStop = direction?.stops.find(
+    (stop) => stop.stopId === selectedStopId
+  );
+  const color = lineColors[selectedLine ?? '1'] ?? theme.colors.primary;
+  const cancelFocus = () => {
+    ++directionGeneration.current;
+    directionController.current?.abort();
+    setDirectionLookup(undefined);
+    consumedFocus.current = focusRequest?.id;
+    pendingScroll.current = undefined;
+    pendingReveal.current = undefined;
+    onCancelFocus?.();
+  };
+  const scrollPending = useCallback(() => {
+    const pending = pendingScroll.current;
+    if (pending === undefined || !heroRef.current || !onFocusStop) return;
+    requestAnimationFrame(() => {
+      if (pendingScroll.current !== pending || !heroRef.current) return;
+      pendingScroll.current = undefined;
+      onFocusStop(heroRef.current);
     });
-    autoFocusRef.current = focusStopId;
-  }, [focusStopId, linePriorityOrder, sections, selectedDirectionSection, selectedLineSection]);
+  }, [onFocusStop]);
+  const revealPending = useCallback(() => {
+    const pending = pendingReveal.current;
+    if (pending === undefined || !selectedRowRef.current || !onRevealStop)
+      return;
+    requestAnimationFrame(() => {
+      if (pendingReveal.current !== pending || !selectedRowRef.current) return;
+      pendingReveal.current = undefined;
+      onRevealStop(selectedRowRef.current);
+    });
+  }, [onRevealStop]);
+  useEffect(() => {
+    revealPending();
+  }, [showAllStops, selectedStopId, revealPending]);
+  useEffect(() => {
+    if (!focusRequest || consumedFocus.current === focusRequest.id) return;
+    const candidate = linePriorityOrder
+      .map((id) =>
+        sections.find(
+          (item) =>
+            item.line === id &&
+            item.directions.some((d) =>
+              d.stops.some((stop) => stop.stopId === focusRequest.stopId)
+            )
+        )
+      )
+      .find(Boolean);
+    const choices = candidate?.directions.filter((d) =>
+      d.stops.some((stop) => stop.stopId === focusRequest.stopId)
+    );
+    // At a terminus prefer the departure direction to the direction ending at that stop.
+    const nextDirection =
+      choices?.find((d) => d.directionId === focusRequest.directionId) ??
+      choices?.find((d) => d.stops[0]?.stopId === focusRequest.stopId) ??
+      choices?.[0];
+    if (!candidate || !nextDirection) return;
+    consumedFocus.current = focusRequest.id;
+    pendingScroll.current = focusRequest.id;
+    setSelectedLine(candidate.line);
+    setSelectedDirection(nextDirection.directionId);
+    ++directionGeneration.current;
+    directionController.current?.abort();
+    setDirectionLookup(undefined);
+    setNearbyAccess(undefined);
+    setSelectedStopId(focusRequest.stopId);
+    pendingReveal.current = undefined;
+    setShowAllStops(false);
+    setExpandedStops({});
+  }, [focusRequest, linePriorityOrder, sections]);
+  useEffect(() => {
+    scrollPending();
+  }, [
+    selectedLine,
+    selectedDirection,
+    selectedStopId,
+    focusRequest,
+    scrollPending
+  ]);
+  const stopName = currentStop?.stopName;
+  const stopId = currentStop?.stopId;
+  useEffect(() => {
+    if (stopId && stopName && selectedLine && selectedDirection) {
+      onSelectionChange?.({
+        stopId,
+        stopName,
+        line: selectedLine,
+        directionId: selectedDirection
+      });
+    }
+  }, [stopId, stopName, selectedLine, selectedDirection, onSelectionChange]);
 
-  if (!sections.length) {
+  const chooseDirection = async (next: DirectionSection) => {
+    cancelFocus();
+    setSelectedDirection(next.directionId);
+    setShowAllStops(false);
+    setExpandedStops({});
+    setNearbyAccess(undefined);
+    const generation = ++directionGeneration.current;
+    const controller = new AbortController();
+    directionController.current = controller;
+    setDirectionLookup('locating');
+    try {
+      const position = isFreshPosition(userPosition)
+        ? userPosition
+        : await onRequestUserPosition?.();
+      if (
+        controller.signal.aborted ||
+        generation !== directionGeneration.current
+      )
+        return;
+      if (!position || !isFreshPosition(position)) {
+        setDirectionLookup('error');
+        return;
+      }
+      setDirectionLookup('routing');
+      const stops = next.stops
+        .map((stop) => stopMetadata[stop.stopId])
+        .filter(Boolean);
+      const result = await findNearbyStop(stops, position, controller.signal);
+      if (
+        controller.signal.aborted ||
+        generation !== directionGeneration.current
+      )
+        return;
+      if (!result) {
+        setDirectionLookup('error');
+        return;
+      }
+      setSelectedStopId(result.stop.stopId);
+      setNearbyAccess(result);
+      setDirectionLookup(undefined);
+      onSelectNearbyStop?.(result.stop.stopId);
+    } catch {
+      if (
+        !controller.signal.aborted &&
+        generation === directionGeneration.current
+      )
+        setDirectionLookup('error');
+    }
+  };
+  const chips = (
+    <View style={styles.lineSelector}>
+      <Text style={styles.heading}>Líneas</Text>
+      <View style={styles.lines} accessibilityLabel="Seleccionar línea">
+        {sections.map((item) => {
+          const active = item.line === selectedLine;
+          return (
+            <Pressable
+              key={item.line}
+              accessibilityRole="button"
+              accessibilityLabel={`Línea ${item.line}`}
+              accessibilityState={{ selected: active }}
+              testID={`line-${item.line}`}
+              onPress={() => {
+                cancelFocus();
+                setSelectedLine(item.line);
+                setSelectedDirection(undefined);
+                setShowAllStops(false);
+              }}
+              style={({ pressed }) => [
+                styles.chip,
+                active && { backgroundColor: lineColors[item.line] },
+                pressed && styles.pressed
+              ]}
+            >
+              <Text
+                style={[
+                  styles.chipText,
+                  active && { color: lineTextColor(item.line) }
+                ]}
+              >
+                {item.line}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+  if (!line)
     return (
-      <View style={[styles.card, styles.emptyState]}>
-        <Text style={styles.emptyTitle}>Sin datos de llegada</Text>
-        <Text style={styles.emptySubtitle}>
-          Aún no tenemos información de espera. Actualiza en unos segundos.
-        </Text>
+      <View style={styles.stack}>
+        {chips}
+        <Text style={styles.heading}>Selecciona una línea</Text>
+      </View>
+    );
+  if (!direction) {
+    return (
+      <View style={styles.stack}>
+        {chips}
+        <Text style={styles.secondary}>Elige el sentido de tu viaje</Text>
+        {line.directions.map((d) => {
+          const summary = 'Buscar la parada más cercana en este sentido';
+          return (
+            <Pressable
+              key={d.directionId}
+              accessibilityRole="button"
+              accessibilityLabel={d.directionName}
+              onPress={() => chooseDirection(d)}
+              style={({ pressed }) => [
+                styles.directionOption,
+                pressed && styles.pressed
+              ]}
+            >
+              <View
+                style={[styles.directionMark, { backgroundColor: color }]}
+              />
+              <View style={styles.flex}>
+                <Text style={styles.destination}>{d.directionName}</Text>
+                <Text style={styles.secondary}>{summary}</Text>
+              </View>
+              <Text style={styles.arrow}>›</Text>
+            </Pressable>
+          );
+        })}
       </View>
     );
   }
 
-  const renderLineSelection = () => (
-    <View style={styles.card}>
-      <Text style={styles.header}>Selecciona una línea</Text>
-      {sections.map((section) => (
-        <Pressable
-          key={section.line}
-          accessibilityRole="button"
-          style={styles.lineOption}
-          onPress={() => {
-            setSelectedLine(section.line);
-            setSelectedDirection(undefined);
-            setExpandedStops({});
-          }}
-        >
-          <Text style={styles.lineTitle}>Línea {section.line}</Text>
-          <Text style={styles.lineSummary}>Toca para elegir sentido</Text>
-        </Pressable>
-      ))}
-    </View>
-  );
-
-  if (!selectedLineSection) {
-    return renderLineSelection();
-  }
-
-  const renderDirectionSelection = () => (
-    <View style={styles.card}>
-      <View style={styles.selectionHeader}>
-        <Pressable
-          accessibilityRole="button"
-          style={styles.backButton}
-          onPress={() => {
-            setSelectedLine(undefined);
-            setSelectedDirection(undefined);
-            setExpandedStops({});
-          }}
-        >
-          <Text style={styles.backButtonText}>‹ Líneas</Text>
-        </Pressable>
-        <Text style={styles.header}>Línea {selectedLineSection.line}</Text>
-      </View>
-      {selectedLineSection.directions.map((direction) => {
-        const schedule = directionSchedules[direction.directionId];
-        const nextArrival = pickNextArrival(direction, schedule, nowMinutes);
-        const summaryLabel = formatDirectionSummary(nextArrival, schedule, now, nowMinutes);
-
-        return (
-          <Pressable
-            key={direction.directionId}
-            accessibilityRole="button"
-            style={styles.directionOption}
-            onPress={() => {
-              setSelectedDirection(direction.directionId);
-              setExpandedStops({});
-            }}
-          >
-            <View style={styles.directionOptionHeader}>
-              <Text style={styles.directionTitle}>{direction.directionName}</Text>
-              <Text style={styles.directionSubtitle}>{summaryLabel}</Text>
-            </View>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-
-  if (!selectedDirectionSection) {
-    return renderDirectionSelection();
-  }
-
-  return (
-    <View style={styles.card}>
-      <View style={styles.selectionHeader}>
-        <Pressable
-          accessibilityRole="button"
-          style={styles.backButton}
-          onPress={() => {
-            setSelectedDirection(undefined);
-            setExpandedStops({});
-          }}
-        >
-          <Text style={styles.backButtonText}>‹ Sentidos</Text>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          style={styles.secondaryBackButton}
-          onPress={() => {
-            setSelectedLine(undefined);
-            setSelectedDirection(undefined);
-            setExpandedStops({});
-          }}
-        >
-          <Text style={styles.secondaryBackButtonText}>Cambiar línea</Text>
-        </Pressable>
-      </View>
-      <Text style={styles.header}>Línea {selectedLineSection.line}</Text>
-      <Text style={styles.directionBreadcrumb}>{selectedDirectionSection.directionName}</Text>
-      {selectedDirectionSection.stops.map((stop) => {
-        const stopKey = `${selectedLineSection.line}:${selectedDirectionSection.directionId}:${stop.stopId}`;
-        const isExpanded = Boolean(expandedStops[stopKey]);
-        const hasCustomName = !stop.stopName.startsWith('Parada ');
-        const stopLabel = hasCustomName ? `${stop.stopId} · ${stop.stopName}` : stop.stopId;
-        const schedule = directionSchedules[selectedDirectionSection.directionId];
-
-        return (
-          <View key={stop.stopId} style={styles.stopSection}>
+  if (directionLookup || !currentStop)
+    return (
+      <View style={styles.stack}>
+        {chips}
+        <Text style={styles.destination}>{direction.directionName}</Text>
+        {directionLookup === 'locating' || directionLookup === 'routing' ? (
+          <View style={styles.lookup}>
+            <ActivityIndicator color={theme.colors.primary} />
+            <Text style={styles.secondary}>
+              {directionLookup === 'locating'
+                ? 'Buscando tu ubicación…'
+                : 'Buscando la parada más cercana para este sentido…'}
+            </Text>
+          </View>
+        ) : (
+          <>
+            <Text style={styles.secondary}>
+              No se pudo obtener una ubicación para buscar una parada de este
+              sentido. Activa la ubicación y vuelve a intentarlo.
+            </Text>
             <Pressable
               accessibilityRole="button"
-              style={styles.stopToggle}
-              onPress={() =>
-                setExpandedStops((prev) => ({
-                  ...prev,
-                  [stopKey]: !prev[stopKey]
-                }))
-              }
+              accessibilityLabel="Reintentar búsqueda de parada cercana"
+              onPress={() => void chooseDirection(direction)}
+              style={styles.directionOption}
             >
-              <Text style={styles.stopLabel}>{stopLabel}</Text>
-              <Text style={styles.toggleIcon}>{isExpanded ? 'v' : '>'}</Text>
+              <Text style={styles.link}>Reintentar ubicación</Text>
             </Pressable>
-            {isExpanded ? (
-              stop.primaryArrivals.length ? (
-                stop.primaryArrivals.map((item, index) => {
-                  const arrivalLabel = formatArrivalLabel(item, schedule, now, nowMinutes);
-                  const isArrivingNow = arrivalLabel === 'Llegando';
-                  return (
-                    <View key={`${item.stopId}-${index}`} style={styles.item}>
-                      <View style={styles.itemContent}>
-                        <Text style={styles.destination}>Línea {selectedLineSection.line}</Text>
-                      </View>
-                      <Text style={isArrivingNow ? styles.arrivingBadge : styles.minutes}>
-                        {arrivalLabel}
-                      </Text>
-                    </View>
-                  );
-                })
-              ) : schedule && !isWithinSchedule(nowMinutes, schedule) ? (
-                <Text style={styles.scheduleInfo}>Primer servicio a las {schedule.start}</Text>
-              ) : (
-                <Text style={styles.stopEmpty}>
-                  Sin próximas llegadas para la línea {selectedLineSection.line}
-                </Text>
-              )
+          </>
+        )}
+      </View>
+    );
+  const schedule = directionSchedules[direction.directionId];
+  const stale =
+    staleIds.has(currentStop.stopId) ||
+    Boolean(dataError && !staleStopIds.length);
+  const hasError = Boolean(dataError) || stale;
+  const estimates = currentStop.primaryArrivals;
+  const first = estimates[0];
+  const label = first
+    ? formatArrivalLabel(first, schedule, now, nowMinutes, stale)
+    : '';
+  const minuteLabel = /^\d+ min$/.test(label);
+  const arriving = minuteLabel && first?.arrivalInMinutes === 0;
+  const directionName = direction.directionName.replace(/^A\s+/, '');
+  const currentIndex = direction.stops.findIndex(
+    (stop) => stop.stopId === currentStop.stopId
+  );
+  const visibleStops = showAllStops ? direction.stops : [currentStop];
+  const otherServices = sections
+    .flatMap((section) =>
+      section.directions.flatMap((d) => {
+        const stop = d.stops.find((item) => item.stopId === currentStop.stopId);
+        if (!stop || section.line === line.line) return [];
+        return [
+          {
+            line: section.line,
+            directionId: d.directionId,
+            destination: d.directionName,
+            arrival: stop.primaryArrivals[0]
+          }
+        ];
+      })
+    )
+    .sort(
+      (a, b) =>
+        (stale ? Infinity : a.arrival?.arrivalInMinutes ?? Infinity) -
+          (stale ? Infinity : b.arrival?.arrivalInMinutes ?? Infinity) ||
+        Number(a.line) - Number(b.line)
+    );
+
+  return (
+    <View style={styles.stack}>
+      {chips}
+      <View
+        ref={heroRef}
+        collapsable={false}
+        onLayout={scrollPending}
+        testID="arrival-hero"
+        accessibilityLabel={`Parada ${currentStop.stopId}: ${currentStop.stopName}`}
+        style={[styles.hero, { borderTopColor: color }]}
+      >
+        <View style={styles.heroTop}>
+          <View style={styles.flex}>
+            <Text style={styles.eyebrow}>LLEGADAS A ESTA PARADA</Text>
+            <Text style={styles.destination}>
+              {'Sentido: ' + directionName}
+            </Text>
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Actualizar llegadas"
+            accessibilityHint={
+              dataError ??
+              'Se actualiza automáticamente cada minuto. Pulsa para actualizar ahora.'
+            }
+            disabled={isLoading}
+            onPress={onRefresh}
+            style={[styles.status, hasError && styles.staleStatus]}
+          >
+            <View
+              style={[
+                styles.liveDot,
+                hasError && { backgroundColor: theme.colors.warning }
+              ]}
+            />
+            <Text
+              style={[
+                styles.statusText,
+                hasError && { color: theme.colors.warning }
+              ]}
+            >
+              {hasError
+                ? isLoading
+                  ? 'Reintentando…'
+                  : stale
+                  ? 'Sin actualizar ↻'
+                  : 'Actualización parcial ↻'
+                : isLoading
+                ? 'Actualizando'
+                : first
+                ? 'En directo ↻'
+                : 'Sin llegadas ↻'}
+            </Text>
+          </Pressable>
+        </View>
+        {hasError ? (
+          <Text accessibilityRole="alert" style={styles.warningCaption}>
+            {stale
+              ? 'Información sin actualizar. '
+              : 'Algunas paradas no se han actualizado. '}
+            Reintento automático cada minuto.
+          </Text>
+        ) : null}
+        <Text style={styles.heroStop}>
+          Parada {currentStop.stopId} · {currentStop.stopName}
+        </Text>
+        {nearbyAccess?.stop.stopId === currentStop.stopId ? (
+          <View style={styles.accessInfo}>
+            <Text style={styles.secondary}>
+              {nearbyAccess.method === 'walking'
+                ? (nearbyAccess.walkingSeconds! < 60
+                    ? 'Menos de 1 min a pie'
+                    : Math.ceil(nearbyAccess.walkingSeconds! / 60) +
+                      ' min a pie') +
+                  ' · ' +
+                  distanceLabel(nearbyAccess.walkingMeters!, locale)
+                : distanceLabel(nearbyAccess.straightDistanceMeters, locale)}
+              {nearbyAccess.method === 'straight' ? (
+                <Text>{' · '}En línea recta</Text>
+              ) : null}
+            </Text>
+            {nearbyAccess.method === 'straight' ? (
+              <Text style={styles.secondary}>
+                {nearbyAccess.straightDistanceMeters > 5000
+                  ? 'Ruta a pie no calculada para esta distancia.'
+                  : 'Ruta a pie no disponible.'}
+              </Text>
             ) : null}
-            {isExpanded && stop.otherLineArrivals.length ? (
-              <View style={styles.otherLinesContainer}>
-                {stop.otherLineArrivals.map((other) => (
-                  <View key={`${stop.stopId}-${other.line}`} style={styles.otherLineSection}>
-                    <Text style={styles.otherLineLabel}>También pasa línea {other.line}</Text>
-                    {other.arrivals.map((item, index) => {
-                      const arrivalLabel = formatArrivalLabel(item, undefined, now, nowMinutes);
-                      const isArrivingNow = arrivalLabel === 'Llegando';
-                      return (
-                        <View key={`${item.line}-${item.stopId}-${index}`} style={styles.item}>
-                          <View style={styles.itemContent}>
-                            <Text style={styles.destination}>Línea {other.line}</Text>
-                          </View>
-                          <Text style={isArrivingNow ? styles.arrivingBadge : styles.minutes}>
-                            {arrivalLabel}
-                          </Text>
-                        </View>
-                      );
-                    })}
-                  </View>
-                ))}
-              </View>
+            {nearbyAccess.position.accuracy === 'approximate' ? (
+              <Text style={styles.secondary}>
+                Ubicación aproximada: la parada sugerida puede variar
+                {' · '}
+                <Text>Desde tu ubicación de las</Text>{' '}
+                {new Date(nearbyAccess.position.observedAt).toLocaleTimeString(
+                  locale,
+                  { hour: '2-digit', minute: '2-digit' }
+                )}
+              </Text>
+            ) : null}
+            {nearbyAccess.method === 'walking' ? (
+              <Pressable
+                accessibilityRole="link"
+                onPress={() => {
+                  void Linking.openURL(
+                    'https://www.openstreetmap.org/fixthemap'
+                  ).catch(() => {});
+                }}
+                style={styles.touchLink}
+              >
+                <Text style={styles.routeAttribution}>
+                  Ruta estimada · Valhalla / © OpenStreetMap · Corregir mapa ↗
+                </Text>
+              </Pressable>
             ) : null}
           </View>
-        );
-      })}
+        ) : null}
+        {stale ? (
+          <View style={styles.historicalBox}>
+            <Text style={styles.historicalTitle}>Datos anteriores</Text>
+            <Text style={styles.historical}>
+              {first
+                ? label
+                : 'No hay información actualizada para esta parada.'}
+            </Text>
+          </View>
+        ) : first ? (
+          <View style={styles.timeRow}>
+            <Text
+              testID="arrival-primary-time"
+              style={[
+                styles.time,
+                (!minuteLabel || arriving) && styles.clockTime
+              ]}
+            >
+              {arriving
+                ? 'Llegando'
+                : minuteLabel
+                ? String(first.arrivalInMinutes)
+                : label}
+            </Text>
+            {minuteLabel && !arriving ? (
+              <Text style={styles.timeUnit}>min</Text>
+            ) : null}
+          </View>
+        ) : (
+          <View style={styles.emptyHero}>
+            <Text style={styles.noArrival}>
+              {isLoading ? 'Consultando llegadas…' : 'Sin próximas llegadas'}
+            </Text>
+            {!isLoading &&
+            schedule &&
+            !isWithinSchedule(nowMinutes, schedule) ? (
+              <Text style={styles.secondary}>
+                Primer servicio a las {schedule.start}
+              </Text>
+            ) : null}
+          </View>
+        )}
+        {!stale && estimates.length > 1 ? (
+          <View style={styles.nextRow}>
+            <Text style={styles.secondary}>Después</Text>
+            {estimates.slice(1, 3).map((arrival, index) => (
+              <Text
+                key={`${arrival.observedAt}-${index}`}
+                style={styles.nextTime}
+              >
+                {index ? '·  ' : ''}
+                {formatArrivalLabel(arrival, schedule, now, nowMinutes)}
+              </Text>
+            ))}
+          </View>
+        ) : null}
+      </View>
+      {otherServices.length ? (
+        <View style={styles.otherServices}>
+          <Text style={styles.heading}>También pasan por esta parada</Text>
+          {otherServices.map((service) => (
+            <Pressable
+              key={service.line + service.directionId}
+              accessibilityRole="button"
+              accessibilityLabel={
+                'Ver línea ' + service.line + ' en esta parada'
+              }
+              style={styles.serviceRow}
+              onPress={() => {
+                cancelFocus();
+                setSelectedLine(service.line);
+                setSelectedDirection(service.directionId);
+                setExpandedStops({});
+                setShowAllStops(false);
+              }}
+            >
+              <View
+                style={[
+                  styles.otherLineBadge,
+                  { backgroundColor: lineColors[service.line] }
+                ]}
+              >
+                <Text
+                  style={{
+                    color: lineTextColor(service.line),
+                    fontWeight: '700'
+                  }}
+                >
+                  {service.line}
+                </Text>
+              </View>
+              <View style={styles.flex}>
+                <Text style={styles.secondary}>{service.destination}</Text>
+              </View>
+              <Text style={styles.link}>
+                {stale
+                  ? 'Dato anterior'
+                  : service.arrival
+                  ? formatArrivalLabel(
+                      service.arrival,
+                      undefined,
+                      now,
+                      nowMinutes
+                    )
+                  : 'Sin llegadas'}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      ) : null}
+      <View style={styles.row}>
+        <Text style={styles.heading}>Recorrido</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={
+            showAllStops ? 'Mostrar menos paradas' : 'Ver todas las paradas'
+          }
+          accessibilityState={{ expanded: showAllStops }}
+          onPress={() => {
+            cancelFocus();
+            pendingReveal.current = ++revealSequence.current;
+            setShowAllStops(!showAllStops);
+          }}
+          style={styles.touchLink}
+        >
+          <Text style={styles.link}>
+            {showAllStops ? 'Mostrar menos' : 'Ver recorrido →'}
+          </Text>
+        </Pressable>
+      </View>
+      <View style={styles.timeline}>
+        {visibleStops.length > 1 ? (
+          <View
+            pointerEvents="none"
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            style={StyleSheet.absoluteFill}
+          >
+            <View style={styles.routeShaft} />
+            <View style={styles.routeArrowHead} />
+          </View>
+        ) : null}
+        {visibleStops.map((stop) => {
+          const key = `${line.line}:${direction.directionId}:${stop.stopId}`;
+          const current = stop.stopId === currentStop.stopId;
+          const expanded = !!expandedStops[key];
+          const stopStale = staleIds.has(stop.stopId);
+          return (
+            <View
+              key={key}
+              testID={current ? 'selected-route-stop' : undefined}
+              ref={current ? selectedRowRef : undefined}
+              collapsable={false}
+              onLayout={current ? revealPending : undefined}
+              style={styles.stop}
+            >
+              <View
+                style={[
+                  styles.dot,
+                  current && { backgroundColor: color, borderColor: color }
+                ]}
+              />
+              <View style={styles.stopBody}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`${stop.stopId} · ${stop.stopName}`}
+                  accessibilityState={{ selected: current, expanded }}
+                  onPress={() => {
+                    cancelFocus();
+                    setSelectedStopId(stop.stopId);
+                    setNearbyAccess(undefined);
+                    onManualSelectStop?.(stop.stopId);
+                    setExpandedStops((previous) =>
+                      previous[key] ? {} : { [key]: true }
+                    );
+                  }}
+                  style={styles.stopButton}
+                >
+                  <View style={styles.flex}>
+                    <Text
+                      style={[styles.stopName, current && styles.selectedStop]}
+                    >
+                      {stop.stopName}
+                    </Text>
+                    <Text style={styles.stopMeta}>
+                      Parada {stop.stopId}
+                      {current ? ' · Seleccionada' : ''}
+                    </Text>
+                  </View>
+                  <Text style={styles.stopAffordance}>
+                    {expanded ? '−' : '+'}
+                  </Text>
+                </Pressable>
+                {expanded ? (
+                  <View style={styles.stopDetails}>
+                    {stop.primaryArrivals.length ? (
+                      stop.primaryArrivals.map((arrival, i) => (
+                        <View key={i} style={styles.estimateRow}>
+                          <Text style={styles.estimateLine}>
+                            Línea {line.line}
+                          </Text>
+                          <Text
+                            style={
+                              stopStale
+                                ? styles.historical
+                                : styles.estimateTime
+                            }
+                          >
+                            {formatArrivalLabel(
+                              arrival,
+                              schedule,
+                              now,
+                              nowMinutes,
+                              stopStale
+                            )}
+                          </Text>
+                        </View>
+                      ))
+                    ) : (
+                      <Text style={styles.secondary}>
+                        {stopStale
+                          ? 'No hay información actualizada para esta parada.'
+                          : `Sin próximas llegadas para la línea ${line.line}`}
+                      </Text>
+                    )}
+                    {stop.otherLineArrivals.map((other) => (
+                      <View key={other.line} style={styles.otherLine}>
+                        <View style={styles.otherLineHeader}>
+                          <Text style={styles.secondary}>También pasa</Text>
+                          <View
+                            style={[
+                              styles.otherLineBadge,
+                              {
+                                backgroundColor:
+                                  lineColors[other.line] ?? theme.colors.primary
+                              }
+                            ]}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 12,
+                                fontWeight: '700',
+                                color: lineTextColor(other.line)
+                              }}
+                            >
+                              Línea {other.line}
+                            </Text>
+                          </View>
+                        </View>
+                        {other.arrivals.map((arrival, i) => (
+                          <Text
+                            key={i}
+                            style={
+                              stopStale
+                                ? styles.historical
+                                : styles.estimateTime
+                            }
+                          >
+                            {formatArrivalLabel(
+                              arrival,
+                              undefined,
+                              now,
+                              nowMinutes,
+                              stopStale
+                            )}
+                          </Text>
+                        ))}
+                      </View>
+                    ))}
+                  </View>
+                ) : null}
+              </View>
+            </View>
+          );
+        })}
+        {!showAllStops && currentIndex === direction.stops.length - 1 ? (
+          <Text style={styles.secondary}>
+            Fin de este sentido. Puedes cambiar el sentido del recorrido.
+          </Text>
+        ) : null}
+      </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing(2),
-    gap: theme.spacing(2)
-  },
-  header: {
-    fontSize: 18,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.textPrimary
-  },
-  selectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  backButton: {
-    alignSelf: 'flex-start'
-  },
-  backButtonText: {
-    fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.primary
-  },
-  secondaryBackButton: {
-    alignSelf: 'flex-start'
-  },
-  secondaryBackButtonText: {
-    fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.primary
-  },
-  lineOption: {
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.borderRadius.sm,
-    paddingVertical: theme.spacing(1.5),
-    paddingHorizontal: theme.spacing(1.5),
-    gap: theme.spacing(0.5)
-  },
-  lineTitle: {
-    fontSize: 18,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.primary
-  },
-  lineSummary: {
-    fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.textSecondary
-  },
-  directionOption: {
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.borderRadius.sm,
-    paddingVertical: theme.spacing(1.5),
-    paddingHorizontal: theme.spacing(1.5)
-  },
-  directionOptionHeader: {
-    gap: theme.spacing(0.25)
-  },
-  directionTitle: {
-    fontSize: 16,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.textPrimary
-  },
-  directionSubtitle: {
-    fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.textSecondary
-  },
-  stopList: {
-    marginTop: theme.spacing(1),
-    gap: theme.spacing(1)
-  },
-  stopSection: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.sm,
-    padding: theme.spacing(1)
-  },
-  stopToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  stopLabel: {
-    fontSize: 15,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.textPrimary
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.borderRadius.sm,
-    paddingVertical: theme.spacing(1),
-    paddingHorizontal: theme.spacing(1.5)
-  },
-  itemContent: {
-    flex: 1,
-    gap: theme.spacing(0.25)
-  },
-  stopName: {
-    fontSize: 15,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.textPrimary
-  },
-  destination: {
-    fontSize: 13,
-    fontFamily: theme.fonts.regular,
-    color: theme.colors.textSecondary
-  },
-  stopEmpty: {
-    fontSize: 13,
-    fontFamily: theme.fonts.regular,
-    color: theme.colors.textSecondary,
-    marginTop: theme.spacing(1)
-  },
-  scheduleInfo: {
-    fontSize: 13,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.textSecondary,
-    marginTop: theme.spacing(1)
-  },
-  otherLinesContainer: {
-    marginTop: theme.spacing(1),
-    gap: theme.spacing(1)
-  },
-  otherLineSection: {
-    gap: theme.spacing(0.75)
-  },
-  otherLineLabel: {
-    fontSize: 13,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.textSecondary
-  },
-  minutes: {
-    fontSize: 16,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.success,
-    marginLeft: theme.spacing(2)
-  },
-  arrivingBadge: {
-    fontSize: 16,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.onPrimary,
-    backgroundColor: theme.colors.success,
-    paddingVertical: theme.spacing(0.5),
-    paddingHorizontal: theme.spacing(1.5),
-    borderRadius: theme.borderRadius.sm,
-    overflow: 'hidden'
-  },
-  toggleIcon: {
-    fontSize: 16,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.textSecondary,
-    marginLeft: theme.spacing(1)
-  },
-  sectionDivider: {
-    height: 1,
-    backgroundColor: '#E2E4EA33',
-    marginVertical: theme.spacing(1.5)
-  },
-  directionBreadcrumb: {
-    fontSize: 16,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.textSecondary
-  },
-  emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  emptyTitle: {
-    fontSize: 16,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.textPrimary
-  },
-  emptySubtitle: {
-    fontSize: 14,
-    fontFamily: theme.fonts.regular,
-    color: theme.colors.textSecondary,
-    textAlign: 'center'
-  }
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    stack: { gap: 18 },
+    lookup: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      padding: 16,
+      backgroundColor: theme.colors.surface,
+      borderRadius: 16
+    },
+    accessInfo: { gap: 4 },
+    routeAttribution: { fontSize: 11, color: theme.colors.textSecondary },
+    warningCaption: {
+      color: theme.colors.warning,
+      fontSize: 12,
+      lineHeight: 18
+    },
+    otherServices: { gap: 8 },
+    serviceRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      padding: 10,
+      borderRadius: 12,
+      backgroundColor: theme.colors.surface,
+      minHeight: 48
+    },
+    routeShaft: {
+      position: 'absolute',
+      left: 6,
+      top: 22,
+      bottom: 10,
+      width: 1.5,
+      backgroundColor: theme.colors.textSecondary
+    },
+    routeArrowHead: {
+      position: 'absolute',
+      left: 2.5,
+      bottom: 8,
+      width: 8,
+      height: 8,
+      borderRightWidth: 1.5,
+      borderBottomWidth: 1.5,
+      borderColor: theme.colors.textSecondary,
+      transform: [{ rotate: '45deg' }]
+    },
+    lineSelector: { gap: 10 },
+    flex: { flex: 1, minWidth: 0 },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: 8
+    },
+    lines: { flexDirection: 'row', gap: 9 },
+    chip: {
+      flex: 1,
+      minHeight: 46,
+      maxWidth: 62,
+      borderRadius: 12,
+      backgroundColor: theme.colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 8
+    },
+    chipText: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: theme.colors.textSecondary
+    },
+    pressed: { opacity: 0.7 },
+    heading: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: theme.colors.textPrimary
+    },
+    secondary: {
+      fontSize: 13,
+      color: theme.colors.textSecondary,
+      lineHeight: 20,
+      flexShrink: 1
+    },
+    hero: {
+      borderTopWidth: 5,
+      borderRadius: 22,
+      backgroundColor: theme.colors.surface,
+      paddingHorizontal: 20,
+      paddingTop: 18,
+      paddingBottom: 10,
+      gap: 10
+    },
+    heroTop: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      flexWrap: 'wrap'
+    },
+    badge: {
+      minWidth: 42,
+      minHeight: 42,
+      borderRadius: 11,
+      padding: 6,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    badgeText: { fontSize: 24, fontWeight: '800' },
+    eyebrow: {
+      fontSize: 11,
+      fontWeight: '600',
+      color: theme.colors.textSecondary,
+      letterSpacing: 1
+    },
+    destination: {
+      fontSize: 19,
+      color: theme.colors.textPrimary,
+      fontWeight: '700',
+      flexShrink: 1
+    },
+    heroStop: {
+      fontSize: 13,
+      color: theme.colors.textSecondary,
+      lineHeight: 19
+    },
+    status: {
+      flexDirection: 'row',
+      gap: 5,
+      alignItems: 'center',
+      minHeight: 44,
+      paddingVertical: 8,
+      paddingHorizontal: 9,
+      borderRadius: 20,
+      backgroundColor: theme.colors.successSurface
+    },
+    staleStatus: { backgroundColor: theme.colors.warningSurface },
+    liveDot: {
+      width: 5,
+      height: 5,
+      borderRadius: 3,
+      backgroundColor: theme.colors.success
+    },
+    statusText: {
+      color: theme.colors.success,
+      fontSize: 11,
+      fontWeight: '600'
+    },
+    timeRow: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      gap: 9,
+      flexWrap: 'wrap',
+      paddingVertical: 6
+    },
+    time: {
+      fontSize: 82,
+      fontWeight: '700',
+      color: theme.colors.textPrimary,
+      letterSpacing: -4,
+      fontVariant: ['tabular-nums'],
+      lineHeight: 92
+    },
+    clockTime: { fontSize: 43, lineHeight: 60, letterSpacing: -1 },
+    timeUnit: { fontSize: 23, color: theme.colors.textSecondary },
+    nextRow: {
+      flexDirection: 'row',
+      gap: 10,
+      alignItems: 'center',
+      flexWrap: 'wrap'
+    },
+    nextTime: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: theme.colors.textPrimary
+    },
+    touchLink: { minHeight: 44, justifyContent: 'center', flexShrink: 1 },
+    link: { fontSize: 13, color: theme.colors.primary, fontWeight: '600' },
+    emptyHero: { paddingVertical: 18, gap: 6 },
+    noArrival: {
+      fontSize: 22,
+      color: theme.colors.textPrimary,
+      fontWeight: '600'
+    },
+    historicalBox: { paddingVertical: 15, gap: 8 },
+    historicalTitle: {
+      fontSize: 21,
+      fontWeight: '700',
+      color: theme.colors.textPrimary
+    },
+    historical: {
+      fontSize: 13,
+      color: theme.colors.textSecondary,
+      flexShrink: 1,
+      lineHeight: 20
+    },
+    directionOption: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+      padding: 18,
+      borderRadius: 18,
+      backgroundColor: theme.colors.surface
+    },
+    directionMark: { width: 4, alignSelf: 'stretch', borderRadius: 3 },
+    arrow: { fontSize: 24, color: theme.colors.textSecondary },
+    timeline: { gap: 0 },
+    stop: { paddingLeft: 27, position: 'relative' },
+    dot: {
+      position: 'absolute',
+      left: 1,
+      top: 16,
+      width: 12,
+      height: 12,
+      borderWidth: 2,
+      borderRadius: 7,
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.border
+    },
+    stopBody: { paddingBottom: 12 },
+    stopButton: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      minHeight: 44,
+      gap: 10,
+      paddingVertical: 8
+    },
+    stopName: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+      flexShrink: 1
+    },
+    selectedStop: { color: theme.colors.textPrimary, fontWeight: '700' },
+    stopMeta: { fontSize: 11, color: theme.colors.textSecondary, marginTop: 3 },
+    stopAffordance: {
+      color: theme.colors.textSecondary,
+      fontSize: 12,
+      fontWeight: '600',
+      paddingTop: 2
+    },
+    stopDetails: { gap: 6, paddingVertical: 4 },
+    estimateRow: {
+      flexDirection: 'row',
+      gap: 10,
+      justifyContent: 'space-between',
+      alignItems: 'baseline',
+      paddingVertical: 8,
+      paddingHorizontal: 10,
+      backgroundColor: theme.colors.mutedSurface,
+      borderRadius: 10
+    },
+    estimateLine: {
+      fontSize: 12,
+      color: theme.colors.textSecondary,
+      flexShrink: 0
+    },
+    estimateTime: {
+      fontSize: 14,
+      color: theme.colors.success,
+      fontWeight: '600',
+      flexShrink: 1
+    },
+    otherLine: {
+      gap: 6,
+      padding: 10,
+      backgroundColor: theme.colors.mutedSurface,
+      borderRadius: 10
+    },
+    otherLineHeader: {
+      flexDirection: 'row',
+      gap: 8,
+      alignItems: 'center',
+      flexWrap: 'wrap'
+    },
+    otherLineBadge: {
+      minHeight: 26,
+      paddingHorizontal: 9,
+      paddingVertical: 4,
+      borderRadius: 13,
+      justifyContent: 'center'
+    }
+  });
+}

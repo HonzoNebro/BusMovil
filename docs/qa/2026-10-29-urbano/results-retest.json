@@ -1,0 +1,10 @@
+[
+  {
+    "case": "mapa-controles",
+    "status": "PASS"
+  },
+  {
+    "case": "datos-antiguos",
+    "status": "PASS"
+  }
+]

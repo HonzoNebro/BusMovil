@@ -1,0 +1,7 @@
+{
+  "single_worker": true,
+  "updates_coordinate": true,
+  "exits_on_disconnect": true,
+  "exits_on_gps_stop": true,
+  "physical_device_used": false
+}

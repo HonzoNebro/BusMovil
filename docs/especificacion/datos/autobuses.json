@@ -1,0 +1,1904 @@
+{
+  "source": "Catálogo local revisado por el usuario; no reimportar coordenadas sin contrastar",
+  "lines": [
+    {
+      "line": "1",
+      "directions": [
+        {
+          "id": "1-plaza-espana",
+          "name": "A Plaza España",
+          "stops": [
+            {
+              "stopId": "9905",
+              "label": "Centro Educativo Cortadura",
+              "latitude": 36.493496,
+              "longitude": -6.269304
+            },
+            {
+              "stopId": "1114",
+              "label": "Cortadura (Vuelta)",
+              "latitude": 36.498002,
+              "longitude": -6.272011
+            },
+            {
+              "stopId": "1115",
+              "label": "Telegrafía (Vuelta)",
+              "latitude": 36.500292,
+              "longitude": -6.273338
+            },
+            {
+              "stopId": "1116",
+              "label": "Estadio (Vuelta)",
+              "latitude": 36.50222,
+              "longitude": -6.274459
+            },
+            {
+              "stopId": "1117",
+              "label": "Balneario - Glorieta Ana Orantes (Vuelta)",
+              "latitude": 36.506402,
+              "longitude": -6.276906
+            },
+            {
+              "stopId": "1118",
+              "label": "Residencia - Hospital Puerta del Mar",
+              "latitude": 36.509192,
+              "longitude": -6.278472
+            },
+            {
+              "stopId": "1119",
+              "label": "San José (Vuelta)",
+              "latitude": 36.512331,
+              "longitude": -6.280229
+            },
+            {
+              "stopId": "1120",
+              "label": "San Felipe (Vuelta)",
+              "latitude": 36.515534,
+              "longitude": -6.282093
+            },
+            {
+              "stopId": "1121",
+              "label": "Plaza Asdrúbal - Mercado Virgen del Rosario (Vuelta)",
+              "latitude": 36.517804,
+              "longitude": -6.283331
+            },
+            {
+              "stopId": "1122",
+              "label": "Comisaría - Avenida de Andalucía 45 (Vuelta)",
+              "latitude": 36.521007,
+              "longitude": -6.28521
+            },
+            {
+              "stopId": "1123",
+              "label": "Avenida de Andalucía (Vuelta)",
+              "latitude": 36.524525,
+              "longitude": -6.287197
+            },
+            {
+              "stopId": "1124",
+              "label": "Puertas de Tierra (Vuelta)",
+              "latitude": 36.527237,
+              "longitude": -6.288753
+            },
+            {
+              "stopId": "1125",
+              "label": "Renfe - Cuesta de Las Calesas",
+              "latitude": 36.529269,
+              "longitude": -6.289697
+            },
+            {
+              "stopId": "1126",
+              "label": "Avenida del Puerto (Vuelta)",
+              "latitude": 36.531806,
+              "longitude": -6.292288
+            },
+            {
+              "stopId": "1101",
+              "label": "Plaza España",
+              "latitude": 36.534149,
+              "longitude": -6.292969
+            }
+          ]
+        },
+        {
+          "id": "1-cortadura",
+          "name": "A Cortadura",
+          "stops": [
+            {
+              "stopId": "1101",
+              "label": "Plaza España",
+              "latitude": 36.534149,
+              "longitude": -6.292969
+            },
+            {
+              "stopId": "1102",
+              "label": "Avenida del Puerto",
+              "latitude": 36.530329,
+              "longitude": -6.291148
+            },
+            {
+              "stopId": "1103",
+              "label": "Puertas de Tierra",
+              "latitude": 36.52689,
+              "longitude": -6.289099
+            },
+            {
+              "stopId": "1104",
+              "label": "Avenida de Andalucía",
+              "latitude": 36.524088,
+              "longitude": -6.287125
+            },
+            {
+              "stopId": "1105",
+              "label": "Comisaría - Avenida de Andalucía 45",
+              "latitude": 36.520876,
+              "longitude": -6.285322
+            },
+            {
+              "stopId": "1106",
+              "label": "Plaza Asdrúbal - Mercado Virgen del Rosario",
+              "latitude": 36.517423,
+              "longitude": -6.283439
+            },
+            {
+              "stopId": "1107",
+              "label": "San Felipe",
+              "latitude": 36.515435,
+              "longitude": -6.282232
+            },
+            {
+              "stopId": "1108",
+              "label": "San José",
+              "latitude": 36.511947,
+              "longitude": -6.280231
+            },
+            {
+              "stopId": "1109",
+              "label": "Residencia - Hospital Puerta del Mar",
+              "latitude": 36.509067,
+              "longitude": -6.278601
+            },
+            {
+              "stopId": "1110",
+              "label": "Balneario - Glorieta Ana Orantes",
+              "latitude": 36.506355,
+              "longitude": -6.277075
+            },
+            {
+              "stopId": "1111",
+              "label": "Estadio",
+              "latitude": 36.501845,
+              "longitude": -6.274419
+            },
+            {
+              "stopId": "1112",
+              "label": "Telegrafía (Vuelta)",
+              "latitude": 36.499833,
+              "longitude": -6.273317
+            },
+            {
+              "stopId": "1113",
+              "label": "Cortadura",
+              "latitude": 36.497011,
+              "longitude": -6.27175
+            },
+            {
+              "stopId": "1114",
+              "label": "Cortadura (Vuelta)",
+              "latitude": 36.498002,
+              "longitude": -6.272011
+            },
+            {
+              "stopId": "1901",
+              "label": "Cortadura (Prolongación)",
+              "latitude": 36.49827,
+              "longitude": -6.271868
+            },
+            {
+              "stopId": "9905",
+              "label": "Centro Educativo Cortadura",
+              "latitude": 36.493496,
+              "longitude": -6.269304
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": "2",
+      "directions": [
+        {
+          "id": "2-plaza-espana",
+          "name": "A Plaza España",
+          "stops": [
+            {
+              "stopId": "1223",
+              "label": "Barriada Loreto",
+              "latitude": 36.504203,
+              "longitude": -6.269878
+            },
+            {
+              "stopId": "1224",
+              "label": "Asociación de Vecinos Puntales",
+              "latitude": 36.506271,
+              "longitude": -6.268005
+            },
+            {
+              "stopId": "1311",
+              "label": "Avenida Marconi",
+              "latitude": 36.507185,
+              "longitude": -6.270361
+            },
+            {
+              "stopId": "1225",
+              "label": "Avenida Lacave",
+              "latitude": 36.509324,
+              "longitude": -6.27233
+            },
+            {
+              "stopId": "1226",
+              "label": "Alcalde Blazquez",
+              "latitude": 36.509356,
+              "longitude": -6.274717
+            },
+            {
+              "stopId": "1227",
+              "label": "Trille",
+              "latitude": 36.511809,
+              "longitude": -6.276117
+            },
+            {
+              "stopId": "1228",
+              "label": "Avenida Portugal",
+              "latitude": 36.514854,
+              "longitude": -6.277502
+            },
+            {
+              "stopId": "1229",
+              "label": "Guillén Moreno",
+              "latitude": 36.518281,
+              "longitude": -6.278831
+            },
+            {
+              "stopId": "1230",
+              "label": "Cibeles",
+              "latitude": 36.520264,
+              "longitude": -6.279802
+            },
+            {
+              "stopId": "1231",
+              "label": "Tolosa Latour 1",
+              "latitude": 36.521156,
+              "longitude": -6.281135
+            },
+            {
+              "stopId": "1232",
+              "label": "Tolosa Latour 2",
+              "latitude": 36.522202,
+              "longitude": -6.283018
+            },
+            {
+              "stopId": "1233",
+              "label": "Juan Ramón Jimenez",
+              "latitude": 36.522803,
+              "longitude": -6.285553
+            },
+            {
+              "stopId": "1123",
+              "label": "Avenida de Andalucía (Vuelta)",
+              "latitude": 36.524525,
+              "longitude": -6.287197
+            },
+            {
+              "stopId": "1234",
+              "label": "Puertas de Tierra",
+              "latitude": 36.526359,
+              "longitude": -6.289968
+            },
+            {
+              "stopId": "1235",
+              "label": "Mirandilla - Teatro Romano",
+              "latitude": 36.527939,
+              "longitude": -6.29344
+            },
+            {
+              "stopId": "1236",
+              "label": "Catedral",
+              "latitude": 36.528784,
+              "longitude": -6.296183
+            },
+            {
+              "stopId": "1237",
+              "label": "Mercado Central",
+              "latitude": 36.528748,
+              "longitude": -6.298903
+            },
+            {
+              "stopId": "1238",
+              "label": "Sagasta",
+              "latitude": 36.528327,
+              "longitude": -6.301209
+            },
+            {
+              "stopId": "1239",
+              "label": "San Félix",
+              "latitude": 36.528041,
+              "longitude": -6.303325
+            },
+            {
+              "stopId": "1240",
+              "label": "Hospital Mora - Playa La Caleta",
+              "latitude": 36.531497,
+              "longitude": -6.305383
+            },
+            {
+              "stopId": "1241",
+              "label": "Hotel Atlántico",
+              "latitude": 36.53445,
+              "longitude": -6.304889
+            },
+            {
+              "stopId": "1242",
+              "label": "Parque Genovés",
+              "latitude": 36.536768,
+              "longitude": -6.302102
+            },
+            {
+              "stopId": "1243",
+              "label": "Alameda Hermanas Carvia Bernal",
+              "latitude": 36.537422,
+              "longitude": -6.299629
+            },
+            {
+              "stopId": "1244",
+              "label": "Alameda Clara Campoamor",
+              "latitude": 36.536504,
+              "longitude": -6.294718
+            },
+            {
+              "stopId": "1245",
+              "label": "República Argentina",
+              "latitude": 36.536058,
+              "longitude": -6.291781
+            },
+            {
+              "stopId": "1201",
+              "label": "Plaza España",
+              "latitude": 36.534851,
+              "longitude": -6.292135
+            }
+          ]
+        },
+        {
+          "id": "2-barriada-loreto",
+          "name": "A Barriada Loreto",
+          "stops": [
+            {
+              "stopId": "1201",
+              "label": "Plaza España",
+              "latitude": 36.534851,
+              "longitude": -6.292135
+            },
+            {
+              "stopId": "1202",
+              "label": "República Argentina",
+              "latitude": 36.536243,
+              "longitude": -6.291588
+            },
+            {
+              "stopId": "1203",
+              "label": "Alameda Clara Campoamor",
+              "latitude": 36.536578,
+              "longitude": -6.295023
+            },
+            {
+              "stopId": "1204",
+              "label": "Alameda Hermanas Carvia Bernal",
+              "latitude": 36.537133,
+              "longitude": -6.298956
+            },
+            {
+              "stopId": "1205",
+              "label": "Parque Genovés",
+              "latitude": 36.536446,
+              "longitude": -6.302735
+            },
+            {
+              "stopId": "1206",
+              "label": "Hotel Atlántico",
+              "latitude": 36.534217,
+              "longitude": -6.305385
+            },
+            {
+              "stopId": "1207",
+              "label": "Hospital Mora - Playa La Caleta",
+              "latitude": 36.53156,
+              "longitude": -6.305565
+            },
+            {
+              "stopId": "1208",
+              "label": "San Félix",
+              "latitude": 36.527961,
+              "longitude": -6.303502
+            },
+            {
+              "stopId": "1209",
+              "label": "Sagasta",
+              "latitude": 36.52831,
+              "longitude": -6.300898
+            },
+            {
+              "stopId": "1210",
+              "label": "Mercado Central",
+              "latitude": 36.528808,
+              "longitude": -6.298049
+            },
+            {
+              "stopId": "1211",
+              "label": "Mirandilla - Teatro Romano",
+              "latitude": 36.527618,
+              "longitude": -6.292672
+            },
+            {
+              "stopId": "1212",
+              "label": "Puertas de Tierra",
+              "latitude": 36.526122,
+              "longitude": -6.289228
+            },
+            {
+              "stopId": "1213",
+              "label": "Acacias",
+              "latitude": 36.524958,
+              "longitude": -6.286411
+            },
+            {
+              "stopId": "1214",
+              "label": "Brunete",
+              "latitude": 36.52201,
+              "longitude": -6.284169
+            },
+            {
+              "stopId": "1215",
+              "label": "Ciudad de Santander",
+              "latitude": 36.521018,
+              "longitude": -6.281905
+            },
+            {
+              "stopId": "1216",
+              "label": "Vicente Aleixandre",
+              "latitude": 36.519659,
+              "longitude": -6.28019
+            },
+            {
+              "stopId": "1217",
+              "label": "Guillén Moreno",
+              "latitude": 36.517358,
+              "longitude": -6.279057
+            },
+            {
+              "stopId": "1218",
+              "label": "Avenida Portugal",
+              "latitude": 36.514663,
+              "longitude": -6.277602
+            },
+            {
+              "stopId": "1219",
+              "label": "Trille",
+              "latitude": 36.511344,
+              "longitude": -6.276063
+            },
+            {
+              "stopId": "1220",
+              "label": "Santo Tomás",
+              "latitude": 36.508748,
+              "longitude": -6.276053
+            },
+            {
+              "stopId": "1221",
+              "label": "Avenida Marconi",
+              "latitude": 36.507403,
+              "longitude": -6.271691
+            },
+            {
+              "stopId": "1222",
+              "label": "Asociación de Vecinos Puntales",
+              "latitude": 36.506236,
+              "longitude": -6.268105
+            },
+            {
+              "stopId": "1223",
+              "label": "Barriada Loreto",
+              "latitude": 36.504203,
+              "longitude": -6.269878
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": "3",
+      "directions": [
+        {
+          "id": "3-plaza-espana",
+          "name": "A Plaza España",
+          "stops": [
+            {
+              "stopId": "1318",
+              "label": "Avenida de La Ilustración",
+              "latitude": 36.507832,
+              "longitude": -6.268054
+            },
+            {
+              "stopId": "1319",
+              "label": "Avenida de La Ilustración",
+              "latitude": 36.507435,
+              "longitude": -6.268392
+            },
+            {
+              "stopId": "1311",
+              "label": "Avenida Marconi",
+              "latitude": 36.507185,
+              "longitude": -6.270361
+            },
+            {
+              "stopId": "1225",
+              "label": "Avenida Lacave",
+              "latitude": 36.509324,
+              "longitude": -6.27233
+            },
+            {
+              "stopId": "1312",
+              "label": "Avenida Guadalete",
+              "latitude": 36.510802,
+              "longitude": -6.27241
+            },
+            {
+              "stopId": "1313",
+              "label": "Sotillo",
+              "latitude": 36.51265,
+              "longitude": -6.272603
+            },
+            {
+              "stopId": "1314",
+              "label": "Federico Godoy",
+              "latitude": 36.515005,
+              "longitude": -6.273667
+            },
+            {
+              "stopId": "1315",
+              "label": "Brigadier Tofino",
+              "latitude": 36.518136,
+              "longitude": -6.275779
+            },
+            {
+              "stopId": "1316",
+              "label": "Santo Domingo",
+              "latitude": 36.519456,
+              "longitude": -6.277384
+            },
+            {
+              "stopId": "1317",
+              "label": "San Severiano",
+              "latitude": 36.520771,
+              "longitude": -6.279033
+            },
+            {
+              "stopId": "1231",
+              "label": "Tolosa Latour 1",
+              "latitude": 36.521156,
+              "longitude": -6.281135
+            },
+            {
+              "stopId": "1232",
+              "label": "Tolosa Latour 2",
+              "latitude": 36.522202,
+              "longitude": -6.283018
+            },
+            {
+              "stopId": "1233",
+              "label": "Juan Ramón Jimenez",
+              "latitude": 36.522803,
+              "longitude": -6.285553
+            },
+            {
+              "stopId": "1123",
+              "label": "Avenida de Andalucía (Vuelta)",
+              "latitude": 36.524525,
+              "longitude": -6.287197
+            },
+            {
+              "stopId": "1124",
+              "label": "Puertas de Tierra (Vuelta)",
+              "latitude": 36.527237,
+              "longitude": -6.288753
+            },
+            {
+              "stopId": "1125",
+              "label": "Renfe - Cuesta de Las Calesas",
+              "latitude": 36.529269,
+              "longitude": -6.289697
+            },
+            {
+              "stopId": "1126",
+              "label": "Avenida del Puerto (Vuelta)",
+              "latitude": 36.531806,
+              "longitude": -6.292288
+            },
+            {
+              "stopId": "1301",
+              "label": "Plaza España",
+              "latitude": 36.533914,
+              "longitude": -6.292995
+            }
+          ]
+        },
+        {
+          "id": "3-puntales",
+          "name": "A Puntales",
+          "stops": [
+            {
+              "stopId": "1301",
+              "label": "Plaza España",
+              "latitude": 36.533914,
+              "longitude": -6.292995
+            },
+            {
+              "stopId": "1102",
+              "label": "Avenida del Puerto",
+              "latitude": 36.530329,
+              "longitude": -6.291148
+            },
+            {
+              "stopId": "1103",
+              "label": "Puertas de Tierra",
+              "latitude": 36.52689,
+              "longitude": -6.289099
+            },
+            {
+              "stopId": "1213",
+              "label": "Acacias",
+              "latitude": 36.524958,
+              "longitude": -6.286411
+            },
+            {
+              "stopId": "1214",
+              "label": "Brunete",
+              "latitude": 36.52201,
+              "longitude": -6.284169
+            },
+            {
+              "stopId": "1215",
+              "label": "Ciudad de Santander",
+              "latitude": 36.521018,
+              "longitude": -6.281905
+            },
+            {
+              "stopId": "1302",
+              "label": "San Severiano",
+              "latitude": 36.520415,
+              "longitude": -6.27874
+            },
+            {
+              "stopId": "1303",
+              "label": "Santo Domingo",
+              "latitude": 36.519089,
+              "longitude": -6.277109
+            },
+            {
+              "stopId": "1304",
+              "label": "Brigadier Tofino",
+              "latitude": 36.517662,
+              "longitude": -6.275369
+            },
+            {
+              "stopId": "1305",
+              "label": "Federico Godoy",
+              "latitude": 36.514478,
+              "longitude": -6.273553
+            },
+            {
+              "stopId": "1306",
+              "label": "Sotillo",
+              "latitude": 36.512318,
+              "longitude": -6.272582
+            },
+            {
+              "stopId": "1307",
+              "label": "Avenida Guadalete",
+              "latitude": 36.510917,
+              "longitude": -6.272475
+            },
+            {
+              "stopId": "1308",
+              "label": "Avenida Lacave",
+              "latitude": 36.509382,
+              "longitude": -6.272475
+            },
+            {
+              "stopId": "1309",
+              "label": "Avenida Marconi",
+              "latitude": 36.507071,
+              "longitude": -6.270018
+            },
+            {
+              "stopId": "1318",
+              "label": "Avenida de La Ilustración",
+              "latitude": 36.507832,
+              "longitude": -6.268054
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": "5",
+      "directions": [
+        {
+          "id": "5-plaza-espana",
+          "name": "A Plaza España (Club Deportivo Elcano)",
+          "stops": [
+            {
+              "stopId": "1516",
+              "label": "Zona Franca",
+              "latitude": 36.494561,
+              "longitude": -6.265903
+            },
+            {
+              "stopId": "1514",
+              "label": "Club Deportivo Elcano",
+              "latitude": 36.498735,
+              "longitude": -6.259375
+            },
+            {
+              "stopId": "1515",
+              "label": "Avenida Profesora Isabel Azcarate Ristori",
+              "latitude": 36.495264,
+              "longitude": -6.265501
+            },
+            {
+              "stopId": "1517",
+              "label": "Avenida Profesora Isabel Azcarate Ristori",
+              "latitude": 36.495061,
+              "longitude": -6.266456
+            },
+            {
+              "stopId": "1518",
+              "label": "Algeciras",
+              "latitude": 36.498149,
+              "longitude": -6.267271
+            },
+            {
+              "stopId": "1519",
+              "label": "Glorieta Zona Franca",
+              "latitude": 36.501482,
+              "longitude": -6.269647
+            },
+            {
+              "stopId": "1520",
+              "label": "Barriada Loreto",
+              "latitude": 36.504932,
+              "longitude": -6.272888
+            },
+            {
+              "stopId": "1521",
+              "label": "Cerro del Moro",
+              "latitude": 36.508515,
+              "longitude": -6.274524
+            },
+            {
+              "stopId": "1227",
+              "label": "Trille",
+              "latitude": 36.511809,
+              "longitude": -6.276117
+            },
+            {
+              "stopId": "1228",
+              "label": "Avenida Portugal",
+              "latitude": 36.514854,
+              "longitude": -6.277502
+            },
+            {
+              "stopId": "1229",
+              "label": "Guillén Moreno",
+              "latitude": 36.518281,
+              "longitude": -6.278831
+            },
+            {
+              "stopId": "1522",
+              "label": "Avenida de Huelva",
+              "latitude": 36.52013,
+              "longitude": -6.276879
+            },
+            {
+              "stopId": "1523",
+              "label": "Centro Comercial",
+              "latitude": 36.522058,
+              "longitude": -6.277093
+            },
+            {
+              "stopId": "1524",
+              "label": "Avenida de Las Cortes",
+              "latitude": 36.523325,
+              "longitude": -6.2797
+            },
+            {
+              "stopId": "1525",
+              "label": "Dique - Estación de Autobuses",
+              "latitude": 36.527456,
+              "longitude": -6.284941
+            },
+            {
+              "stopId": "1526",
+              "label": "Plaza Sevilla",
+              "latitude": 36.530104,
+              "longitude": -6.289014
+            },
+            {
+              "stopId": "1126",
+              "label": "Avenida del Puerto (Vuelta)",
+              "latitude": 36.531806,
+              "longitude": -6.292288
+            },
+            {
+              "stopId": "1501",
+              "label": "Plaza España",
+              "latitude": 36.534345,
+              "longitude": -6.293104
+            }
+          ]
+        },
+        {
+          "id": "5-zona-franca",
+          "name": "A Zona Franca (Club Deportivo Elcano)",
+          "stops": [
+            {
+              "stopId": "1501",
+              "label": "Plaza España",
+              "latitude": 36.534345,
+              "longitude": -6.293104
+            },
+            {
+              "stopId": "1502",
+              "label": "Avenida del Puerto",
+              "latitude": 36.530327,
+              "longitude": -6.291145
+            },
+            {
+              "stopId": "1503",
+              "label": "Plaza Sevilla",
+              "latitude": 36.529949,
+              "longitude": -6.289143
+            },
+            {
+              "stopId": "1504",
+              "label": "Dique - Estación de Autobuses",
+              "latitude": 36.527452,
+              "longitude": -6.285097
+            },
+            {
+              "stopId": "1505",
+              "label": "Avenida de Las Cortes",
+              "latitude": 36.522721,
+              "longitude": -6.278842
+            },
+            {
+              "stopId": "1506",
+              "label": "Centro Comercial",
+              "latitude": 36.521971,
+              "longitude": -6.27726
+            },
+            {
+              "stopId": "1507",
+              "label": "Avenida de Huelva",
+              "latitude": 36.520518,
+              "longitude": -6.276517
+            },
+            {
+              "stopId": "1217",
+              "label": "Guillén Moreno",
+              "latitude": 36.517358,
+              "longitude": -6.279057
+            },
+            {
+              "stopId": "1218",
+              "label": "Avenida Portugal",
+              "latitude": 36.514663,
+              "longitude": -6.277602
+            },
+            {
+              "stopId": "1219",
+              "label": "Trille",
+              "latitude": 36.511344,
+              "longitude": -6.276063
+            },
+            {
+              "stopId": "1508",
+              "label": "La Laguna 1",
+              "latitude": 36.507066,
+              "longitude": -6.274073
+            },
+            {
+              "stopId": "1509",
+              "label": "La Laguna 2",
+              "latitude": 36.505277,
+              "longitude": -6.273236
+            },
+            {
+              "stopId": "1510",
+              "label": "Estadio",
+              "latitude": 36.501819,
+              "longitude": -6.271638
+            },
+            {
+              "stopId": "1511",
+              "label": "Jimena de La Frontera",
+              "latitude": 36.499831,
+              "longitude": -6.269229
+            },
+            {
+              "stopId": "1512",
+              "label": "Ronda de Vigilancia 1",
+              "latitude": 36.500046,
+              "longitude": -6.266005
+            },
+            {
+              "stopId": "1513",
+              "label": "Ronda de Vigilancia 2",
+              "latitude": 36.497194,
+              "longitude": -6.264688
+            },
+            {
+              "stopId": "1515",
+              "label": "Avenida Profesora Isabel Azcarate Ristori",
+              "latitude": 36.495264,
+              "longitude": -6.265501
+            },
+            {
+              "stopId": "1516",
+              "label": "Zona Franca",
+              "latitude": 36.494561,
+              "longitude": -6.265903
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": "7",
+      "directions": [
+        {
+          "id": "7-glorieta-ana-orantes",
+          "name": "A Glorieta Ana Orantes",
+          "stops": [
+            {
+              "stopId": "1707",
+              "label": "Simón Bolívar",
+              "latitude": 36.53328,
+              "longitude": -6.306083
+            },
+            {
+              "stopId": "1207",
+              "label": "Hospital Mora - Playa La Caleta",
+              "latitude": 36.53156,
+              "longitude": -6.305565
+            },
+            {
+              "stopId": "1208",
+              "label": "San Félix",
+              "latitude": 36.527961,
+              "longitude": -6.303502
+            },
+            {
+              "stopId": "1209",
+              "label": "Sagasta",
+              "latitude": 36.52831,
+              "longitude": -6.300898
+            },
+            {
+              "stopId": "1210",
+              "label": "Mercado Central",
+              "latitude": 36.528808,
+              "longitude": -6.298049
+            },
+            {
+              "stopId": "1211",
+              "label": "Mirandilla - Teatro Romano",
+              "latitude": 36.527618,
+              "longitude": -6.292672
+            },
+            {
+              "stopId": "1708",
+              "label": "Mirador - Playa de Las Mujeres",
+              "latitude": 36.524243,
+              "longitude": -6.288847
+            },
+            {
+              "stopId": "1709",
+              "label": "Comisaría",
+              "latitude": 36.520742,
+              "longitude": -6.286497
+            },
+            {
+              "stopId": "1710",
+              "label": "Plaza Asdrubal",
+              "latitude": 36.517632,
+              "longitude": -6.285878
+            },
+            {
+              "stopId": "1711",
+              "label": "Instituto Drago",
+              "latitude": 36.513898,
+              "longitude": -6.28367
+            },
+            {
+              "stopId": "1712",
+              "label": "Avenida Amilcar Barca 31",
+              "latitude": 36.50961,
+              "longitude": -6.280832
+            },
+            {
+              "stopId": "1713",
+              "label": "Glorieta Ana Orantes",
+              "latitude": 36.507515,
+              "longitude": -6.279577
+            }
+          ]
+        },
+        {
+          "id": "7-simon-bolivar",
+          "name": "A Simón Bolivar",
+          "stops": [
+            {
+              "stopId": "1713",
+              "label": "Glorieta Ana Orantes",
+              "latitude": 36.507515,
+              "longitude": -6.279577
+            },
+            {
+              "stopId": "1117",
+              "label": "Balneario - Glorieta Ana Orantes (Vuelta)",
+              "latitude": 36.506402,
+              "longitude": -6.276906
+            },
+            {
+              "stopId": "1118",
+              "label": "Residencia - Hospital Puerta del Mar",
+              "latitude": 36.509192,
+              "longitude": -6.278472
+            },
+            {
+              "stopId": "1119",
+              "label": "San José (Vuelta)",
+              "latitude": 36.512331,
+              "longitude": -6.280229
+            },
+            {
+              "stopId": "1120",
+              "label": "San Felipe (Vuelta)",
+              "latitude": 36.515534,
+              "longitude": -6.282093
+            },
+            {
+              "stopId": "1121",
+              "label": "Plaza Asdrúbal - Mercado Virgen del Rosario (Vuelta)",
+              "latitude": 36.517804,
+              "longitude": -6.283331
+            },
+            {
+              "stopId": "1122",
+              "label": "Comisaría - Avenida de Andalucía 45 (Vuelta)",
+              "latitude": 36.521007,
+              "longitude": -6.28521
+            },
+            {
+              "stopId": "1123",
+              "label": "Avenida de Andalucía (Vuelta)",
+              "latitude": 36.524525,
+              "longitude": -6.287197
+            },
+            {
+              "stopId": "1234",
+              "label": "Puertas de Tierra",
+              "latitude": 36.526359,
+              "longitude": -6.289968
+            },
+            {
+              "stopId": "1235",
+              "label": "Mirandilla - Teatro Romano",
+              "latitude": 36.527939,
+              "longitude": -6.29344
+            },
+            {
+              "stopId": "1236",
+              "label": "Catedral",
+              "latitude": 36.528784,
+              "longitude": -6.296183
+            },
+            {
+              "stopId": "1237",
+              "label": "Mercado Central",
+              "latitude": 36.528748,
+              "longitude": -6.298903
+            },
+            {
+              "stopId": "1238",
+              "label": "Sagasta",
+              "latitude": 36.528327,
+              "longitude": -6.301209
+            },
+            {
+              "stopId": "1239",
+              "label": "San Félix",
+              "latitude": 36.528041,
+              "longitude": -6.303325
+            },
+            {
+              "stopId": "1240",
+              "label": "Hospital Mora - Playa La Caleta",
+              "latitude": 36.531497,
+              "longitude": -6.305383
+            },
+            {
+              "stopId": "1707",
+              "label": "Simón Bolívar",
+              "latitude": 36.53328,
+              "longitude": -6.306083
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "stopMetadata": {
+    "1101": {
+      "stopId": "1101",
+      "label": "Plaza España",
+      "latitude": 36.534149,
+      "longitude": -6.292969
+    },
+    "1102": {
+      "stopId": "1102",
+      "label": "Avenida del Puerto",
+      "latitude": 36.530329,
+      "longitude": -6.291148
+    },
+    "1103": {
+      "stopId": "1103",
+      "label": "Puertas de Tierra",
+      "latitude": 36.52689,
+      "longitude": -6.289099
+    },
+    "1104": {
+      "stopId": "1104",
+      "label": "Avenida de Andalucía",
+      "latitude": 36.524088,
+      "longitude": -6.287125
+    },
+    "1105": {
+      "stopId": "1105",
+      "label": "Comisaría - Avenida de Andalucía 45",
+      "latitude": 36.520876,
+      "longitude": -6.285322
+    },
+    "1106": {
+      "stopId": "1106",
+      "label": "Plaza Asdrúbal - Mercado Virgen del Rosario",
+      "latitude": 36.517423,
+      "longitude": -6.283439
+    },
+    "1107": {
+      "stopId": "1107",
+      "label": "San Felipe",
+      "latitude": 36.515435,
+      "longitude": -6.282232
+    },
+    "1108": {
+      "stopId": "1108",
+      "label": "San José",
+      "latitude": 36.511947,
+      "longitude": -6.280231
+    },
+    "1109": {
+      "stopId": "1109",
+      "label": "Residencia - Hospital Puerta del Mar",
+      "latitude": 36.509067,
+      "longitude": -6.278601
+    },
+    "1110": {
+      "stopId": "1110",
+      "label": "Balneario - Glorieta Ana Orantes",
+      "latitude": 36.506355,
+      "longitude": -6.277075
+    },
+    "1111": {
+      "stopId": "1111",
+      "label": "Estadio",
+      "latitude": 36.501845,
+      "longitude": -6.274419
+    },
+    "1112": {
+      "stopId": "1112",
+      "label": "Telegrafía (Vuelta)",
+      "latitude": 36.499833,
+      "longitude": -6.273317
+    },
+    "1113": {
+      "stopId": "1113",
+      "label": "Cortadura",
+      "latitude": 36.497011,
+      "longitude": -6.27175
+    },
+    "1114": {
+      "stopId": "1114",
+      "label": "Cortadura (Vuelta)",
+      "latitude": 36.498002,
+      "longitude": -6.272011
+    },
+    "1115": {
+      "stopId": "1115",
+      "label": "Telegrafía (Vuelta)",
+      "latitude": 36.500292,
+      "longitude": -6.273338
+    },
+    "1116": {
+      "stopId": "1116",
+      "label": "Estadio (Vuelta)",
+      "latitude": 36.50222,
+      "longitude": -6.274459
+    },
+    "1117": {
+      "stopId": "1117",
+      "label": "Balneario - Glorieta Ana Orantes (Vuelta)",
+      "latitude": 36.506402,
+      "longitude": -6.276906
+    },
+    "1118": {
+      "stopId": "1118",
+      "label": "Residencia - Hospital Puerta del Mar",
+      "latitude": 36.509192,
+      "longitude": -6.278472
+    },
+    "1119": {
+      "stopId": "1119",
+      "label": "San José (Vuelta)",
+      "latitude": 36.512331,
+      "longitude": -6.280229
+    },
+    "1120": {
+      "stopId": "1120",
+      "label": "San Felipe (Vuelta)",
+      "latitude": 36.515534,
+      "longitude": -6.282093
+    },
+    "1121": {
+      "stopId": "1121",
+      "label": "Plaza Asdrúbal - Mercado Virgen del Rosario (Vuelta)",
+      "latitude": 36.517804,
+      "longitude": -6.283331
+    },
+    "1122": {
+      "stopId": "1122",
+      "label": "Comisaría - Avenida de Andalucía 45 (Vuelta)",
+      "latitude": 36.521007,
+      "longitude": -6.28521
+    },
+    "1123": {
+      "stopId": "1123",
+      "label": "Avenida de Andalucía (Vuelta)",
+      "latitude": 36.524525,
+      "longitude": -6.287197
+    },
+    "1124": {
+      "stopId": "1124",
+      "label": "Puertas de Tierra (Vuelta)",
+      "latitude": 36.527237,
+      "longitude": -6.288753
+    },
+    "1125": {
+      "stopId": "1125",
+      "label": "Renfe - Cuesta de Las Calesas",
+      "latitude": 36.529269,
+      "longitude": -6.289697
+    },
+    "1126": {
+      "stopId": "1126",
+      "label": "Avenida del Puerto (Vuelta)",
+      "latitude": 36.531806,
+      "longitude": -6.292288
+    },
+    "1201": {
+      "stopId": "1201",
+      "label": "Plaza España",
+      "latitude": 36.534851,
+      "longitude": -6.292135
+    },
+    "1202": {
+      "stopId": "1202",
+      "label": "República Argentina",
+      "latitude": 36.536243,
+      "longitude": -6.291588
+    },
+    "1203": {
+      "stopId": "1203",
+      "label": "Alameda Clara Campoamor",
+      "latitude": 36.536578,
+      "longitude": -6.295023
+    },
+    "1204": {
+      "stopId": "1204",
+      "label": "Alameda Hermanas Carvia Bernal",
+      "latitude": 36.537133,
+      "longitude": -6.298956
+    },
+    "1205": {
+      "stopId": "1205",
+      "label": "Parque Genovés",
+      "latitude": 36.536446,
+      "longitude": -6.302735
+    },
+    "1206": {
+      "stopId": "1206",
+      "label": "Hotel Atlántico",
+      "latitude": 36.534217,
+      "longitude": -6.305385
+    },
+    "1207": {
+      "stopId": "1207",
+      "label": "Hospital Mora - Playa La Caleta",
+      "latitude": 36.53156,
+      "longitude": -6.305565
+    },
+    "1208": {
+      "stopId": "1208",
+      "label": "San Félix",
+      "latitude": 36.527961,
+      "longitude": -6.303502
+    },
+    "1209": {
+      "stopId": "1209",
+      "label": "Sagasta",
+      "latitude": 36.52831,
+      "longitude": -6.300898
+    },
+    "1210": {
+      "stopId": "1210",
+      "label": "Mercado Central",
+      "latitude": 36.528808,
+      "longitude": -6.298049
+    },
+    "1211": {
+      "stopId": "1211",
+      "label": "Mirandilla - Teatro Romano",
+      "latitude": 36.527618,
+      "longitude": -6.292672
+    },
+    "1212": {
+      "stopId": "1212",
+      "label": "Puertas de Tierra",
+      "latitude": 36.526122,
+      "longitude": -6.289228
+    },
+    "1213": {
+      "stopId": "1213",
+      "label": "Acacias",
+      "latitude": 36.524958,
+      "longitude": -6.286411
+    },
+    "1214": {
+      "stopId": "1214",
+      "label": "Brunete",
+      "latitude": 36.52201,
+      "longitude": -6.284169
+    },
+    "1215": {
+      "stopId": "1215",
+      "label": "Ciudad de Santander",
+      "latitude": 36.521018,
+      "longitude": -6.281905
+    },
+    "1216": {
+      "stopId": "1216",
+      "label": "Vicente Aleixandre",
+      "latitude": 36.519659,
+      "longitude": -6.28019
+    },
+    "1217": {
+      "stopId": "1217",
+      "label": "Guillén Moreno",
+      "latitude": 36.517358,
+      "longitude": -6.279057
+    },
+    "1218": {
+      "stopId": "1218",
+      "label": "Avenida Portugal",
+      "latitude": 36.514663,
+      "longitude": -6.277602
+    },
+    "1219": {
+      "stopId": "1219",
+      "label": "Trille",
+      "latitude": 36.511344,
+      "longitude": -6.276063
+    },
+    "1220": {
+      "stopId": "1220",
+      "label": "Santo Tomás",
+      "latitude": 36.508748,
+      "longitude": -6.276053
+    },
+    "1221": {
+      "stopId": "1221",
+      "label": "Avenida Marconi",
+      "latitude": 36.507403,
+      "longitude": -6.271691
+    },
+    "1222": {
+      "stopId": "1222",
+      "label": "Asociación de Vecinos Puntales",
+      "latitude": 36.506236,
+      "longitude": -6.268105
+    },
+    "1223": {
+      "stopId": "1223",
+      "label": "Barriada Loreto",
+      "latitude": 36.504203,
+      "longitude": -6.269878
+    },
+    "1224": {
+      "stopId": "1224",
+      "label": "Asociación de Vecinos Puntales",
+      "latitude": 36.506271,
+      "longitude": -6.268005
+    },
+    "1225": {
+      "stopId": "1225",
+      "label": "Avenida Lacave",
+      "latitude": 36.509324,
+      "longitude": -6.27233
+    },
+    "1226": {
+      "stopId": "1226",
+      "label": "Alcalde Blazquez",
+      "latitude": 36.509356,
+      "longitude": -6.274717
+    },
+    "1227": {
+      "stopId": "1227",
+      "label": "Trille",
+      "latitude": 36.511809,
+      "longitude": -6.276117
+    },
+    "1228": {
+      "stopId": "1228",
+      "label": "Avenida Portugal",
+      "latitude": 36.514854,
+      "longitude": -6.277502
+    },
+    "1229": {
+      "stopId": "1229",
+      "label": "Guillén Moreno",
+      "latitude": 36.518281,
+      "longitude": -6.278831
+    },
+    "1230": {
+      "stopId": "1230",
+      "label": "Cibeles",
+      "latitude": 36.520264,
+      "longitude": -6.279802
+    },
+    "1231": {
+      "stopId": "1231",
+      "label": "Tolosa Latour 1",
+      "latitude": 36.521156,
+      "longitude": -6.281135
+    },
+    "1232": {
+      "stopId": "1232",
+      "label": "Tolosa Latour 2",
+      "latitude": 36.522202,
+      "longitude": -6.283018
+    },
+    "1233": {
+      "stopId": "1233",
+      "label": "Juan Ramón Jimenez",
+      "latitude": 36.522803,
+      "longitude": -6.285553
+    },
+    "1234": {
+      "stopId": "1234",
+      "label": "Puertas de Tierra",
+      "latitude": 36.526359,
+      "longitude": -6.289968
+    },
+    "1235": {
+      "stopId": "1235",
+      "label": "Mirandilla - Teatro Romano",
+      "latitude": 36.527939,
+      "longitude": -6.29344
+    },
+    "1236": {
+      "stopId": "1236",
+      "label": "Catedral",
+      "latitude": 36.528784,
+      "longitude": -6.296183
+    },
+    "1237": {
+      "stopId": "1237",
+      "label": "Mercado Central",
+      "latitude": 36.528748,
+      "longitude": -6.298903
+    },
+    "1238": {
+      "stopId": "1238",
+      "label": "Sagasta",
+      "latitude": 36.528327,
+      "longitude": -6.301209
+    },
+    "1239": {
+      "stopId": "1239",
+      "label": "San Félix",
+      "latitude": 36.528041,
+      "longitude": -6.303325
+    },
+    "1240": {
+      "stopId": "1240",
+      "label": "Hospital Mora - Playa La Caleta",
+      "latitude": 36.531497,
+      "longitude": -6.305383
+    },
+    "1241": {
+      "stopId": "1241",
+      "label": "Hotel Atlántico",
+      "latitude": 36.53445,
+      "longitude": -6.304889
+    },
+    "1242": {
+      "stopId": "1242",
+      "label": "Parque Genovés",
+      "latitude": 36.536768,
+      "longitude": -6.302102
+    },
+    "1243": {
+      "stopId": "1243",
+      "label": "Alameda Hermanas Carvia Bernal",
+      "latitude": 36.537422,
+      "longitude": -6.299629
+    },
+    "1244": {
+      "stopId": "1244",
+      "label": "Alameda Clara Campoamor",
+      "latitude": 36.536504,
+      "longitude": -6.294718
+    },
+    "1245": {
+      "stopId": "1245",
+      "label": "República Argentina",
+      "latitude": 36.536058,
+      "longitude": -6.291781
+    },
+    "1301": {
+      "stopId": "1301",
+      "label": "Plaza España",
+      "latitude": 36.533914,
+      "longitude": -6.292995
+    },
+    "1302": {
+      "stopId": "1302",
+      "label": "San Severiano",
+      "latitude": 36.520415,
+      "longitude": -6.27874
+    },
+    "1303": {
+      "stopId": "1303",
+      "label": "Santo Domingo",
+      "latitude": 36.519089,
+      "longitude": -6.277109
+    },
+    "1304": {
+      "stopId": "1304",
+      "label": "Brigadier Tofino",
+      "latitude": 36.517662,
+      "longitude": -6.275369
+    },
+    "1305": {
+      "stopId": "1305",
+      "label": "Federico Godoy",
+      "latitude": 36.514478,
+      "longitude": -6.273553
+    },
+    "1306": {
+      "stopId": "1306",
+      "label": "Sotillo",
+      "latitude": 36.512318,
+      "longitude": -6.272582
+    },
+    "1307": {
+      "stopId": "1307",
+      "label": "Avenida Guadalete",
+      "latitude": 36.510917,
+      "longitude": -6.272475
+    },
+    "1308": {
+      "stopId": "1308",
+      "label": "Avenida Lacave",
+      "latitude": 36.509382,
+      "longitude": -6.272475
+    },
+    "1309": {
+      "stopId": "1309",
+      "label": "Avenida Marconi",
+      "latitude": 36.507071,
+      "longitude": -6.270018
+    },
+    "1310": {
+      "stopId": "1310",
+      "label": "Puntales (Avenida de La Ilustración)",
+      "latitude": null,
+      "longitude": null
+    },
+    "1311": {
+      "stopId": "1311",
+      "label": "Avenida Marconi",
+      "latitude": 36.507185,
+      "longitude": -6.270361
+    },
+    "1312": {
+      "stopId": "1312",
+      "label": "Avenida Guadalete",
+      "latitude": 36.510802,
+      "longitude": -6.27241
+    },
+    "1313": {
+      "stopId": "1313",
+      "label": "Sotillo",
+      "latitude": 36.51265,
+      "longitude": -6.272603
+    },
+    "1314": {
+      "stopId": "1314",
+      "label": "Federico Godoy",
+      "latitude": 36.515005,
+      "longitude": -6.273667
+    },
+    "1315": {
+      "stopId": "1315",
+      "label": "Brigadier Tofino",
+      "latitude": 36.518136,
+      "longitude": -6.275779
+    },
+    "1316": {
+      "stopId": "1316",
+      "label": "Santo Domingo",
+      "latitude": 36.519456,
+      "longitude": -6.277384
+    },
+    "1317": {
+      "stopId": "1317",
+      "label": "San Severiano",
+      "latitude": 36.520771,
+      "longitude": -6.279033
+    },
+    "1318": {
+      "stopId": "1318",
+      "label": "Avenida de La Ilustración",
+      "latitude": 36.507832,
+      "longitude": -6.268054
+    },
+    "1319": {
+      "stopId": "1319",
+      "label": "Avenida de La Ilustración",
+      "latitude": 36.507435,
+      "longitude": -6.268392
+    },
+    "1501": {
+      "stopId": "1501",
+      "label": "Plaza España",
+      "latitude": 36.534345,
+      "longitude": -6.293104
+    },
+    "1502": {
+      "stopId": "1502",
+      "label": "Avenida del Puerto",
+      "latitude": 36.530327,
+      "longitude": -6.291145
+    },
+    "1503": {
+      "stopId": "1503",
+      "label": "Plaza Sevilla",
+      "latitude": 36.529949,
+      "longitude": -6.289143
+    },
+    "1504": {
+      "stopId": "1504",
+      "label": "Dique - Estación de Autobuses",
+      "latitude": 36.527452,
+      "longitude": -6.285097
+    },
+    "1505": {
+      "stopId": "1505",
+      "label": "Avenida de Las Cortes",
+      "latitude": 36.522721,
+      "longitude": -6.278842
+    },
+    "1506": {
+      "stopId": "1506",
+      "label": "Centro Comercial",
+      "latitude": 36.521971,
+      "longitude": -6.27726
+    },
+    "1507": {
+      "stopId": "1507",
+      "label": "Avenida de Huelva",
+      "latitude": 36.520518,
+      "longitude": -6.276517
+    },
+    "1508": {
+      "stopId": "1508",
+      "label": "La Laguna 1",
+      "latitude": 36.507066,
+      "longitude": -6.274073
+    },
+    "1509": {
+      "stopId": "1509",
+      "label": "La Laguna 2",
+      "latitude": 36.505277,
+      "longitude": -6.273236
+    },
+    "1510": {
+      "stopId": "1510",
+      "label": "Estadio",
+      "latitude": 36.501819,
+      "longitude": -6.271638
+    },
+    "1511": {
+      "stopId": "1511",
+      "label": "Jimena de La Frontera",
+      "latitude": 36.499831,
+      "longitude": -6.269229
+    },
+    "1512": {
+      "stopId": "1512",
+      "label": "Ronda de Vigilancia 1",
+      "latitude": 36.500046,
+      "longitude": -6.266005
+    },
+    "1513": {
+      "stopId": "1513",
+      "label": "Ronda de Vigilancia 2",
+      "latitude": 36.497194,
+      "longitude": -6.264688
+    },
+    "1514": {
+      "stopId": "1514",
+      "label": "Club Deportivo Elcano",
+      "latitude": 36.498735,
+      "longitude": -6.259375
+    },
+    "1515": {
+      "stopId": "1515",
+      "label": "Avenida Profesora Isabel Azcarate Ristori",
+      "latitude": 36.495264,
+      "longitude": -6.265501
+    },
+    "1516": {
+      "stopId": "1516",
+      "label": "Zona Franca",
+      "latitude": 36.494561,
+      "longitude": -6.265903
+    },
+    "1517": {
+      "stopId": "1517",
+      "label": "Avenida Profesora Isabel Azcarate Ristori",
+      "latitude": 36.495061,
+      "longitude": -6.266456
+    },
+    "1518": {
+      "stopId": "1518",
+      "label": "Algeciras",
+      "latitude": 36.498149,
+      "longitude": -6.267271
+    },
+    "1519": {
+      "stopId": "1519",
+      "label": "Glorieta Zona Franca",
+      "latitude": 36.501482,
+      "longitude": -6.269647
+    },
+    "1520": {
+      "stopId": "1520",
+      "label": "Barriada Loreto",
+      "latitude": 36.504932,
+      "longitude": -6.272888
+    },
+    "1521": {
+      "stopId": "1521",
+      "label": "Cerro del Moro",
+      "latitude": 36.508515,
+      "longitude": -6.274524
+    },
+    "1522": {
+      "stopId": "1522",
+      "label": "Avenida de Huelva",
+      "latitude": 36.52013,
+      "longitude": -6.276879
+    },
+    "1523": {
+      "stopId": "1523",
+      "label": "Centro Comercial",
+      "latitude": 36.522058,
+      "longitude": -6.277093
+    },
+    "1524": {
+      "stopId": "1524",
+      "label": "Avenida de Las Cortes",
+      "latitude": 36.523325,
+      "longitude": -6.2797
+    },
+    "1525": {
+      "stopId": "1525",
+      "label": "Dique - Estación de Autobuses",
+      "latitude": 36.527456,
+      "longitude": -6.284941
+    },
+    "1526": {
+      "stopId": "1526",
+      "label": "Plaza Sevilla",
+      "latitude": 36.530104,
+      "longitude": -6.289014
+    },
+    "1707": {
+      "stopId": "1707",
+      "label": "Simón Bolívar",
+      "latitude": 36.53328,
+      "longitude": -6.306083
+    },
+    "1708": {
+      "stopId": "1708",
+      "label": "Mirador - Playa de Las Mujeres",
+      "latitude": 36.524243,
+      "longitude": -6.288847
+    },
+    "1709": {
+      "stopId": "1709",
+      "label": "Comisaría",
+      "latitude": 36.520742,
+      "longitude": -6.286497
+    },
+    "1710": {
+      "stopId": "1710",
+      "label": "Plaza Asdrubal",
+      "latitude": 36.517632,
+      "longitude": -6.285878
+    },
+    "1711": {
+      "stopId": "1711",
+      "label": "Instituto Drago",
+      "latitude": 36.513898,
+      "longitude": -6.28367
+    },
+    "1712": {
+      "stopId": "1712",
+      "label": "Avenida Amilcar Barca 31",
+      "latitude": 36.50961,
+      "longitude": -6.280832
+    },
+    "1713": {
+      "stopId": "1713",
+      "label": "Glorieta Ana Orantes",
+      "latitude": 36.507515,
+      "longitude": -6.279577
+    },
+    "1901": {
+      "stopId": "1901",
+      "label": "Cortadura (Prolongación)",
+      "latitude": 36.49827,
+      "longitude": -6.271868
+    },
+    "9905": {
+      "stopId": "9905",
+      "label": "Centro Educativo Cortadura",
+      "latitude": 36.493496,
+      "longitude": -6.269304
+    }
+  }
+}

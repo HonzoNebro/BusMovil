@@ -1,0 +1,9 @@
+{
+  "mainLayout": "PASS",
+  "informationFourSections": "PASS",
+  "faresSeparateTitles": "PASS",
+  "rechargeSearch": "PASS",
+  "departuresDirect": "PASS",
+  "emulatorWithoutNFC": "PASS",
+  "physicalCard": "PENDING: requires phone and actual card"
+}

@@ -1,0 +1,153 @@
+[
+  {
+    "case": "01-cold-start",
+    "status": "PASS",
+    "seconds": 4.0,
+    "detail": "Pantalla principal visible sin Metro."
+  },
+  {
+    "case": "02-five-lines-navigation",
+    "status": "PASS",
+    "seconds": 71.0,
+    "detail": "Se abren sentidos y paradas y se vuelve a líneas en las cinco líneas."
+  },
+  {
+    "case": "03-stop-expand",
+    "status": "PASS",
+    "seconds": 16.2,
+    "detail": "Acordeón de 9905 · Centro Educativo Cortadura abre/cierra."
+  },
+  {
+    "case": "04-map-controls",
+    "status": "PASS",
+    "seconds": 26.7,
+    "detail": "Modal, visibilidad de marcadores y cierre funcionan."
+  },
+  {
+    "case": "05-map-android-back",
+    "status": "PASS",
+    "seconds": 14.0,
+    "detail": "Atrás cierra el mapa y mantiene la app."
+  },
+  {
+    "case": "06-map-repeat",
+    "status": "PASS",
+    "seconds": 35.7,
+    "detail": "Cinco aperturas/cierres consecutivos sin crash."
+  },
+  {
+    "case": "07-gps-plaza",
+    "status": "PASS",
+    "seconds": 15.2,
+    "detail": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "case": "08-gps-hospital",
+    "status": "PASS",
+    "seconds": 14.8,
+    "detail": "Tu parada más cercana es Residencia - Hospital Puerta del Mar (0 m)."
+  },
+  {
+    "case": "09-gps-move",
+    "status": "PASS",
+    "seconds": 27.0,
+    "detail": "Tu parada más cercana es Residencia - Hospital Puerta del Mar (0 m)."
+  },
+  {
+    "case": "10-gps-offset",
+    "status": "PASS",
+    "seconds": 15.1,
+    "detail": "Posición desplazada detectada a 17 m del hospital."
+  },
+  {
+    "case": "11-navigation-after-gps",
+    "status": "PASS",
+    "seconds": 25.2,
+    "detail": "Se permite cambiar de línea tras localizarse."
+  },
+  {
+    "case": "12-directions-after-gps",
+    "status": "PASS",
+    "seconds": 21.3,
+    "detail": ""
+  },
+  {
+    "case": "13-far-from-cadiz",
+    "status": "PASS",
+    "seconds": 14.9,
+    "detail": "OBSERVACIÓN: Tu parada más cercana es República Argentina (486.7 km)."
+  },
+  {
+    "case": "14-gps-disabled",
+    "status": "PASS",
+    "seconds": 23.3,
+    "detail": "Rastreo en tiempo real\nConsulta cuántos minutos faltan para tus líneas de autobús favoritas y recibe sugerencias sobre la parada más cercana.\nParada cercana\nNo se pudo obtener tu ubicación. Inténtalo de nuevo más tarde.\nLa ubicación del dispositivo está desactivada o no está disponible. Activa el GPS y reintenta.\nUsar mi ubicación\nVer mapa de paradas\nSelecciona una línea\nLínea 1\nToca para elegir sentido\nLínea 2\nToca para elegir sentido\nLínea 3\nToca para elegir sentido\nLínea 5\nToca para elegir sentido\nLínea 7"
+  },
+  {
+    "case": "15-offline-arrivals",
+    "status": "PASS",
+    "seconds": 3.9,
+    "detail": ""
+  },
+  {
+    "case": "16-offline-map",
+    "status": "PASS",
+    "seconds": 22.8,
+    "detail": "Inspección visual: teselas, marcadores, trazados y atribución Leaflet/OSM visibles desde caché sin red. No hay fallo de mapa; UIAutomator no expone su contenido.",
+    "verification": "manual-screenshot"
+  },
+  {
+    "case": "17-network-recovery",
+    "status": "PASS",
+    "seconds": 7.2,
+    "detail": "La app vuelve a cargar las líneas con llegadas tras recuperar red."
+  },
+  {
+    "case": "18-landscape",
+    "status": "PASS",
+    "seconds": 15.4,
+    "detail": "En horizontal se puede abrir/cerrar el mapa."
+  },
+  {
+    "case": "19-large-font",
+    "status": "PASS",
+    "seconds": 13.4,
+    "detail": "Fuente 150%: controles principales accesibles por desplazamiento."
+  },
+  {
+    "case": "20-permission-deny",
+    "status": "PASS",
+    "seconds": 11.1,
+    "detail": "Denegación explícita muestra error y libera el botón."
+  },
+  {
+    "case": "21-permission-approximate",
+    "status": "PASS",
+    "seconds": 21.4,
+    "detail": "Rastreo en tiempo real\nConsulta cuántos minutos faltan para tus líneas de autobús favoritas y recibe sugerencias sobre la parada más cercana.\nParada cercana\nTu parada más cercana es Sagasta (646 m).\nUbicación aproximada: la parada sugerida puede variar\nFecha de la ubicación aproximada: 29/10/2026, 0:14:19. Puede no coincidir con tu posición actual.\nUsar mi ubicación\nVer mapa de paradas\n‹ Sentidos\nCambiar línea\nLínea 2\nA Barriada Loreto\n1201 · Plaza España\n>\n1202 · República Argentina\n>\n1203 · Alameda Clara Campoamor\n>\n1204 · Alameda Hermanas Carvia Bernal\n>\n1205 · Parque Genovés\n>\n1206 · Hotel Atlántico\n>"
+  },
+  {
+    "case": "22-permission-recovery",
+    "status": "PASS",
+    "seconds": 13.8,
+    "detail": "La ubicación funciona tras restaurar el permiso preciso."
+  },
+  {
+    "case": "23-map-without-permissions",
+    "status": "PASS",
+    "seconds": 16.4,
+    "detail": "El mapa abre/cierra sin permiso de ubicación y no provoca cierre de la app."
+  },
+  {
+    "case": "24-background-resume",
+    "status": "PASS",
+    "seconds": 13.9,
+    "detail": "Volver de segundo plano conserva el modal y permite cerrarlo."
+  },
+  {
+    "case": "25-gps-scroll-target",
+    "status": "PASS",
+    "seconds": 10.6,
+    "detail": "La fila 1101 queda visible y expandida sin desplazar manualmente."
+  }
+]

@@ -1,0 +1,1246 @@
+/** Official urban/Consortium lists. Coordinates are reused only for exact address matches.
+ * Missing positions/hours are intentionally unknown, not estimated from nearby bus stops. */
+import { straightDistance, type UserPosition } from './walkingStops';
+import { normalizeSearch } from './stopSearch';
+export type RechargeNetwork = 'urban' | 'consortium';
+export interface RechargePoint {
+  id: string;
+  network: RechargeNetwork;
+  name: string;
+  address: string;
+  latitude?: number;
+  longitude?: number;
+  source: string;
+  coordinateSource?: string;
+  checkedAt: string;
+  hours?: string;
+  hoursSource?: string;
+}
+export const RECHARGE_SOURCE = 'https://siu.cmtbc.es/es/puntos_de_venta.php';
+export const rechargePoints: RechargePoint[] = [
+  {
+    id: 'urban-1',
+    network: 'urban',
+    name: 'TRANVÍA DE CÁDIZ',
+    address: 'C/ EL BOSQUE S/N',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    hours: '09:00–14:00 · días no publicados',
+    hoursSource:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-informacion-y-atencion-al-usuario'
+  },
+  {
+    id: 'urban-2',
+    network: 'urban',
+    name: 'ESTANCO Nº 40',
+    address: 'AV/ ANDALUCIA, 32',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.52063518280063,
+    longitude: -6.285371147789149,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-3',
+    network: 'urban',
+    name: 'ESTANCO Nº 57',
+    address: 'C/ VIRGEN DE LA PALMA, 18',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-4',
+    network: 'urban',
+    name: 'PRENSA LIDIA',
+    address: 'C/ LA ROSA, 7',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-5',
+    network: 'urban',
+    name: 'ULTRAMARINOS PANAMA',
+    address: 'C/ FERNAN CABALLERO, 7',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-6',
+    network: 'urban',
+    name: 'LOCUTORIO SOROLLA',
+    address: 'CL/ LAZARO DOU, 1',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.52997,
+    longitude: -6.29126,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-7',
+    network: 'urban',
+    name: 'ESTANCO Nº 48',
+    address: 'C/ EMILIO CASTELAR, 1',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-8',
+    network: 'urban',
+    name: 'PAPELERIA CADIZ',
+    address: 'C/ GRANJA SAN ILDEFONSO, 6',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-9',
+    network: 'urban',
+    name: 'EE.SS. CORTADURA',
+    address: 'AV/ PERIODISTA BEATRIZ CIENFUEGOS, 16',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.49872,
+    longitude: -6.27274,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-10',
+    network: 'urban',
+    name: 'ESTANCO Nº 10',
+    address: 'C/ GERION, 2',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.51161,
+    longitude: -6.27946,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-11',
+    network: 'urban',
+    name: 'PRENSA Y REVISTAS OUVIÑA',
+    address: 'C/ EJERCITO DE AFRICA, 9',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-12',
+    network: 'urban',
+    name: 'PRENSA Y REVISTAS VALERA',
+    address: 'PZ/ PINTOR CLEMENTE DE TORRES, 2',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-13',
+    network: 'urban',
+    name: 'ESTANCO Nº65 -MARSA',
+    address: 'PZ/ VIRGEN DE LORETO, 1',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.50556826153811,
+    longitude: -6.271153753814695,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-14',
+    network: 'urban',
+    name: 'EE. SS. PUERTA TIERRA',
+    address: 'AV/ ANDALUCIA, 2',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-15',
+    network: 'urban',
+    name: 'PRENSA Y REVISTAS FABULA',
+    address: 'C/ SAN JOSE, 4',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-16',
+    network: 'urban',
+    name: 'KIOSKO MILLO',
+    address: 'AV/ LACAVE, 3',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-17',
+    network: 'urban',
+    name: 'REGALOS RICARDO',
+    address: 'PZ/ LOS PORCHES, L-6',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-18',
+    network: 'urban',
+    name: 'ADMINISTRACION DE LOTERIAS – BAR',
+    address: 'C/ SOROLLA, 19',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-19',
+    network: 'urban',
+    name: 'COPISTERIA VIDEOCLUB NUEVO MARFER',
+    address: 'AV/ SEGUNDA AGUADA, 22',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-20',
+    network: 'urban',
+    name: 'ESTANCO Nº 7',
+    address: 'C/ LA ROSA, 2',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-21',
+    network: 'urban',
+    name: 'ESTANCO Nº 55',
+    address: 'C/ GARCIA DE SOLA, 2',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.51985345547395,
+    longitude: -6.282622087731555,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-22',
+    network: 'urban',
+    name: 'ESTANCO Nº 63',
+    address: 'C/ ALCALDE BLAZQUEZ, S/N',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-23',
+    network: 'urban',
+    name: 'ALIMENTACION ARES',
+    address: 'C/ DOCTOR FLEMING, 1',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-24',
+    network: 'urban',
+    name: 'ESTANCO Nº 28',
+    address: 'C/ COLUMELA, 29',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-25',
+    network: 'urban',
+    name: 'ESTANCO Nº27',
+    address: 'PZ/ DE LAS CANASTAS, 2',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.529122,
+    longitude: -6.292163,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-26',
+    network: 'urban',
+    name: 'ESTANCO Nº 62',
+    address: 'AV/ SAN SEVERIANO, 35',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.517882108707376,
+    longitude: -6.277591055450437,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-27',
+    network: 'urban',
+    name: 'ESTANCO Nº 52',
+    address: 'C/ PARLAMENTO, 16',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.516179154850164,
+    longitude: -6.280198162612913,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-28',
+    network: 'urban',
+    name: 'ESTANCO Nº 6 -PLAZA DE ABASTOS',
+    address: 'C/ LIBERTAD, 6',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-29',
+    network: 'urban',
+    name: 'ESTANCO Nº 11',
+    address: 'C/ TRILLE, 29',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.512583427913256,
+    longitude: -6.275177067337034,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-30',
+    network: 'urban',
+    name: 'ESTANCO Nº 59',
+    address: 'C/ MIRAMAR, 2',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.50415825278287,
+    longitude: -6.273868149337766,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-31',
+    network: 'urban',
+    name: 'ESTANCO Nº 16',
+    address: 'AV/ DEL PERU, 14',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.521336,
+    longitude: -6.279731,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-32',
+    network: 'urban',
+    name: 'ESTANCO Nº47',
+    address: 'C/ DIEGO ARIAS',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-33',
+    network: 'urban',
+    name: 'ESTANCO Nº15',
+    address: 'AV/. ANA DE VIYA, 6',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-34',
+    network: 'urban',
+    name: 'PAPELERIA VIRGEN DEL ROSARIO',
+    address: 'MERCADO DEL ROSARIO',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-35',
+    network: 'urban',
+    name: 'KIOSCO YUPI I',
+    address: 'C/ PELOTA, 12',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-36',
+    network: 'urban',
+    name: 'ESTANCO Nº 37',
+    address: 'C/ BENJUMEDA, 40',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-37',
+    network: 'urban',
+    name: 'ESTANCO Nº 17',
+    address: 'CALLEJONES CARDOSO, 10',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-38',
+    network: 'urban',
+    name: 'ESTANCO Nº 33',
+    address: 'C/ NOVENA, LOCAL 3',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-39',
+    network: 'urban',
+    name: 'KIOSCO YUPI II',
+    address: 'C/ SACRAMENTO, 23',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-40',
+    network: 'urban',
+    name: 'ESTANCO Nº42',
+    address: 'PLAZA SAN ANTONIO, 9',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.53431320359654,
+    longitude: -6.298909444180296,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-41',
+    network: 'urban',
+    name: 'LOTERÍAS CANDEM',
+    address: 'AV/ PERIODISTA BEATRIZ CIENFUEGOS, 16',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29',
+    latitude: 36.49872,
+    longitude: -6.27274,
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php'
+  },
+  {
+    id: 'urban-42',
+    network: 'urban',
+    name: 'ESTANCO PLAZA MENTIDERO',
+    address: 'PLAZA MENTIDERO , 6',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'urban-43',
+    network: 'urban',
+    name: 'ESTANCO Nº 41',
+    address: 'PLAZA CANDELARIA, 4',
+    source:
+      'https://tranviadecadizasanfernandoycarraca.es/puntos-de-venta-y-recarga-2',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-1',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Gerión 2',
+    latitude: 36.51161,
+    longitude: -6.27946,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-2',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Gl. Ingeniero de la Cierva',
+    latitude: 36.50584422354938,
+    longitude: -6.27703315597534,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-3',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Pl. Virgen de Loreto, 1',
+    latitude: 36.50556826153811,
+    longitude: -6.271153753814695,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-4',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl Zurbarán 2, ACC Cayetano del Toro',
+    latitude: 36.503398,
+    longitude: -6.27525,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-5',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Pl. de las Canastas 2',
+    latitude: 36.529122,
+    longitude: -6.292163,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-6',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Arbolí, 2',
+    latitude: 36.53052159713967,
+    longitude: -6.296345060882566,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-7',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Pl. San Juan de Dios, 6',
+    latitude: 36.53019399663433,
+    longitude: -6.2920106111145,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-8',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Av. de Portugal, 38',
+    latitude: 36.51446754068083,
+    longitude: -6.278728312072752,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-9',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Av. San Severiano, 35',
+    latitude: 36.517882108707376,
+    longitude: -6.277591055450437,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-10',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Acacias, 8',
+    latitude: 36.524452141458056,
+    longitude: -6.286109751281736,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-11',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'C. Sta. Elena, 2',
+    latitude: 36.52720523098204,
+    longitude: -6.288980632578428,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-12',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Desamparados, 9',
+    latitude: 36.529349125769784,
+    longitude: -6.297696894226072,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-13',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Goya, 15',
+    latitude: 36.50572349029034,
+    longitude: -6.274501150665281,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-14',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Miramar, 2',
+    latitude: 36.50415825278287,
+    longitude: -6.273868149337766,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-15',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Parlamento, 16',
+    latitude: 36.516179154850164,
+    longitude: -6.280198162612913,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-16',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Trille, 29',
+    latitude: 36.512583427913256,
+    longitude: -6.275177067337034,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-17',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Av. Marconi, 1',
+    latitude: 36.508335,
+    longitude: -6.277215,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-18',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Barbate 9',
+    latitude: 36.51031,
+    longitude: -6.2725,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-19',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. García Carrera, 41',
+    latitude: 36.510185884559085,
+    longitude: -6.276493788525137,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-20',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Moreno de Mora, 2',
+    latitude: 36.53125007223749,
+    longitude: -6.304949587402342,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-21',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl de la Rosa 37D - Esquina Diego Arias 24',
+    latitude: 36.531555,
+    longitude: -6.30533,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-22',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Pl. San Francisco, 1',
+    latitude: 36.53436618967203,
+    longitude: -6.29613828735021,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-23',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'CL CEBALLOS, 18',
+    latitude: 36.53445,
+    longitude: -6.3017,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-24',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Ferrán Caballero, 7',
+    latitude: 36.53598684908515,
+    longitude: -6.298874140545401,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-25',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'CL Enrique de las Marinas, 1',
+    latitude: 36.53521,
+    longitude: -6.29804,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-26',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Barrie, 23',
+    latitude: 36.53226,
+    longitude: -6.29711,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-27',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Beato Diego de Cádiz,13',
+    latitude: 36.534086019043215,
+    longitude: -6.294046164318594,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-28',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Sagasta 18',
+    latitude: 36.53321532845594,
+    longitude: -6.297361374661001,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-29',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Callejón Cardoso, 10',
+    latitude: 36.53007,
+    longitude: -6.29925,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-30',
+    network: 'consortium',
+    name: 'Taquilla',
+    address: 'Av. Astilleros, s/n. Estación de autobuses de Cádiz',
+    latitude: 36.527263,
+    longitude: -6.285409,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-31',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'CL COLUMELA, 27-29, BJ',
+    latitude: 36.53271,
+    longitude: -6.29534,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-32',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Pl. Libertad S/N',
+    latitude: 36.5306,
+    longitude: -6.2985,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-33',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Pl. San Antonio, 9',
+    latitude: 36.53431320359654,
+    longitude: -6.298909444180296,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-34',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Av. Cuatro de Diciembre de 1977, 31',
+    latitude: 36.531373,
+    longitude: -6.292666,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-35',
+    network: 'consortium',
+    name: 'Taquilla',
+    address: 'Cl. Dr. Fleming, 1',
+    latitude: 36.5087872882653,
+    longitude: -6.2786580153442335,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-36',
+    network: 'consortium',
+    name: 'Taquilla',
+    address: 'Muelle Reina Viictoria - Pl. de Sevilla',
+    latitude: 36.530715328832784,
+    longitude: -6.289582889024361,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-37',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Cl. Pintor Clemente de Torres, 7',
+    latitude: 36.504138086021506,
+    longitude: -6.2740098601188565,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-38',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Cl. Rosa,7',
+    latitude: 36.53075192162649,
+    longitude: -6.3011552095849765,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-39',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Av. de la Marina, 6',
+    latitude: 36.523820796661504,
+    longitude: -6.284439460118856,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-40',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Av. Ana de Viya, 4',
+    latitude: 36.50887222067555,
+    longitude: -6.278315198147584,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-41',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Av. de Andalucia 32',
+    latitude: 36.519802,
+    longitude: -6.284653,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-42',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. García de Sola,2',
+    latitude: 36.51985345547395,
+    longitude: -6.282622087731555,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-43',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Lubet,2',
+    latitude: 36.52955299760261,
+    longitude: -6.303154441733547,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-44',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Av. Ana de Viya, 44',
+    latitude: 36.509087400827134,
+    longitude: -6.278592834358605,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-45',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Cl. García Carrera (los porches, 6 - 1)',
+    latitude: 36.515218,
+    longitude: -6.277474,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-46',
+    network: 'consortium',
+    name: 'Kiosko',
+    address: 'Cl. Pelota, 13',
+    latitude: 36.529662789428535,
+    longitude: -6.293443996924206,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-47',
+    network: 'consortium',
+    name: 'Kiosko',
+    address: 'Cl. Granja de San Ildefonso, 10',
+    latitude: 36.52177690000015,
+    longitude: -6.2842598018177,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-48',
+    network: 'consortium',
+    name: 'Kiosko',
+    address: 'Pl. de la Catedral, 11',
+    latitude: 36.529459978834474,
+    longitude: -6.2956005067459015,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-49',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Av. del Perú, 14',
+    latitude: 36.521336,
+    longitude: -6.279731,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-50',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Montañés, 6',
+    latitude: 36.531452535428144,
+    longitude: -6.295440697495948,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-51',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Emilio Castelar S/N',
+    latitude: 36.524,
+    longitude: -6.2778,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-52',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Avda. Andalucía, 32',
+    latitude: 36.52063518280063,
+    longitude: -6.285371147789149,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-53',
+    network: 'consortium',
+    name: 'Kiosko',
+    address: 'Av. de la Cave, Nº 3-4',
+    latitude: 36.519044,
+    longitude: -6.281927,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-54',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Plza. Candelaria 4 , Local 2',
+    latitude: 36.53116,
+    longitude: -6.29488,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-55',
+    network: 'consortium',
+    name: 'Kiosko',
+    address: 'Cl. García de Sola, 46',
+    latitude: 36.5157,
+    longitude: -6.2791,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-56',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Cl. Granja de San Ildefonso, 6',
+    latitude: 36.5212,
+    longitude: -6.2858,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-57',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. MARQUES DE LA ENSENADA, 7',
+    latitude: 36.51846,
+    longitude: -6.28158,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-58',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Avad. del Puerto 1',
+    latitude: 36.5304,
+    longitude: -6.2908,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-59',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Cl. Brasil, S/N',
+    latitude: 36.5078,
+    longitude: -6.2785,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-60',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Plza. Mentidero, 5-6',
+    latitude: 36.53598,
+    longitude: -6.303627,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-61',
+    network: 'consortium',
+    name: 'Estacion RENFE',
+    address: 'Estación de tren Cádiz Central. Pl. de Sevilla, S/N',
+    latitude: 36.52862061206032,
+    longitude: -6.287542258438155,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-62',
+    network: 'consortium',
+    name: 'Estacion RENFE',
+    address: 'Estación de tren Cortadura Cádiz. Cl. Adelfa s/n',
+    latitude: 36.494532281354005,
+    longitude: -6.268212915544733,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-63',
+    network: 'consortium',
+    name: 'Estacion RENFE',
+    address: 'Estación de tren Estadio Cádiz. Cl. Gibraltar.',
+    latitude: 36.50281463871436,
+    longitude: -6.272079659533147,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-64',
+    network: 'consortium',
+    name: 'Estacion RENFE',
+    address: 'Estación de tren San Severiano Cádiz. Av. de la Independencia',
+    latitude: 36.52153856510545,
+    longitude: -6.280480571877966,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-65',
+    network: 'consortium',
+    name: 'Estacion RENFE',
+    address:
+      'Estacion de tren Segunda Aguada Cádiz. Avda. de la Sanidad Pública s/n',
+    latitude: 36.51356855042464,
+    longitude: -6.276872242606667,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-66',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Avda. Periodista Beatriz Cienfuegos, 16',
+    latitude: 36.49872,
+    longitude: -6.27274,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-67',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'Cl. Lazaro Dou, 1',
+    latitude: 36.52997,
+    longitude: -6.29126,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-68',
+    network: 'consortium',
+    name: 'Estanco',
+    address: 'Cl. Nereidas 4',
+    latitude: 36.49839,
+    longitude: -6.27263,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  },
+  {
+    id: 'consortium-69',
+    network: 'consortium',
+    name: 'Comercio',
+    address: 'AV BEATRIZ CIENFUEGOS, 12 LOCAL-4',
+    latitude: 36.49917103878773,
+    longitude: -6.272957591175602,
+    source: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    coordinateSource: 'https://siu.cmtbc.es/es/puntos_de_venta.php',
+    checkedAt: '2026-10-29'
+  }
+];
+export function nearbyRecharge(
+  network: RechargeNetwork,
+  query: string,
+  position?: UserPosition
+) {
+  const words = normalizeSearch(query).split(' ').filter(Boolean);
+  return rechargePoints
+    .filter(
+      (p) =>
+        p.network === network &&
+        words.every((w) =>
+          normalizeSearch(p.name + ' ' + p.address).includes(w)
+        )
+    )
+    .map((p) => ({
+      ...p,
+      distance:
+        position &&
+        typeof p.latitude === 'number' &&
+        typeof p.longitude === 'number'
+          ? straightDistance(position, {
+              latitude: p.latitude,
+              longitude: p.longitude
+            })
+          : undefined
+    }))
+    .sort((a, b) =>
+      position
+        ? (a.distance ?? Infinity) - (b.distance ?? Infinity) ||
+          a.name.localeCompare(b.name, 'es')
+        : a.name.localeCompare(b.name, 'es')
+    );
+}

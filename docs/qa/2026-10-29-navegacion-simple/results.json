@@ -1,0 +1,12 @@
+{
+  "previewOrder": "PASS",
+  "before": [
+    "1311 · Avenida Marconi"
+  ],
+  "after": [
+    "1311 · Avenida Marconi",
+    "1225 · Avenida Lacave",
+    "1312 · Avenida Guadalete"
+  ],
+  "visualReview": "REVIEW: comprobar acordeón único, procedencia e iconos"
+}

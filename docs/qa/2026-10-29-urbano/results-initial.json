@@ -1,0 +1,31 @@
+[
+  {
+    "case": "navegacion-cinco-lineas",
+    "status": "PASS"
+  },
+  {
+    "case": "recorrido",
+    "status": "PASS"
+  },
+  {
+    "case": "mapa-controles",
+    "status": "FAIL",
+    "detail": ""
+  },
+  {
+    "case": "gps-y-navegacion",
+    "status": "PASS"
+  },
+  {
+    "case": "oscuro",
+    "status": "PASS"
+  },
+  {
+    "case": "fuente150",
+    "status": "PASS"
+  },
+  {
+    "case": "horizontal",
+    "status": "PASS"
+  }
+]

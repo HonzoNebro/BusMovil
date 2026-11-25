@@ -1,0 +1,17 @@
+{
+  "native": "PASS",
+  "checks": [
+    "Todas iniciales",
+    "Solo línea 1",
+    "Filtros conservados al reabrir",
+    "Ninguna línea",
+    "Restaurar todas",
+    "Ocultar/mostrar"
+  ],
+  "webview": "REVIEW: revisar capturas de flechas y fichas en zoom cercano",
+  "manualReview": {
+    "status": "PASS",
+    "evidence": "zoom-1.png",
+    "detail": "Flechas visibles en ambos sentidos de la línea 1; ficha de San Felipe hacia Cortadura, siguiente San José y acceso a llegadas."
+  }
+}

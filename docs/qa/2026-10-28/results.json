@@ -1,0 +1,153 @@
+[
+  {
+    "case": "01-cold-start",
+    "status": "PASS",
+    "seconds": 4.8,
+    "detail": "Pantalla principal visible sin Metro."
+  },
+  {
+    "case": "02-five-lines-navigation",
+    "status": "PASS",
+    "seconds": 77.4,
+    "detail": "Se abren sentidos y paradas y se vuelve a líneas en las cinco líneas."
+  },
+  {
+    "case": "03-stop-expand",
+    "status": "PASS",
+    "seconds": 19.2,
+    "detail": "Acordeón de 9905 · Centro Educativo Cortadura abre/cierra."
+  },
+  {
+    "case": "04-map-controls",
+    "status": "PASS",
+    "seconds": 32.8,
+    "detail": "Modal, visibilidad de marcadores y cierre funcionan."
+  },
+  {
+    "case": "05-map-android-back",
+    "status": "PASS",
+    "seconds": 9.8,
+    "detail": "Atrás cierra el mapa y mantiene la app."
+  },
+  {
+    "case": "06-map-repeat",
+    "status": "PASS",
+    "seconds": 46.7,
+    "detail": "Cinco aperturas/cierres consecutivos sin crash."
+  },
+  {
+    "case": "07-gps-plaza",
+    "status": "PASS",
+    "seconds": 10.3,
+    "detail": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "case": "08-gps-hospital",
+    "status": "PASS",
+    "seconds": 12.4,
+    "detail": "Tu parada más cercana es Residencia - Hospital Puerta del Mar (0 m)."
+  },
+  {
+    "case": "09-gps-move",
+    "status": "FAIL",
+    "seconds": 37.1,
+    "detail": "No aparece 'Hospital Puerta del Mar (0 m)' en 20s. Pantalla: Rastreo en tiempo real\nConsulta cuántos minutos faltan para tus líneas de autobús favoritas y recibe sugerencias sobre la parada más cercana.\nParada cercana\nTu parada más cercana es Plaza España (0 m).\nUsar mi ubicación\nVer mapa de paradas\n‹ Sentidos\nCambiar línea\nLínea 1\nA Plaza España\n9905 · Centro Educativo Cortadura\n>\n1114 · Cortadura (Vuelta)\n>\n1115 · Telegrafía (Vuelta)\n>\n1116 · Estadio (Vuelta)\n>\n1117 · Balneario - Glorieta Ana Orantes (Vuelta)\n>\n1118 · Residencia - Hospital Puerta del Mar\n>\n1119 · San José (Vuelta)\n>"
+  },
+  {
+    "case": "10-gps-offset",
+    "status": "PASS",
+    "seconds": 9.9,
+    "detail": "Posición desplazada detectada a 17 m del hospital."
+  },
+  {
+    "case": "11-navigation-after-gps",
+    "status": "FAIL",
+    "seconds": 18.8,
+    "detail": "El GPS vuelve a imponer la línea/sentido: Rastreo en tiempo real\nConsulta cuántos minutos faltan para tus líneas de autobús favoritas y recibe sugerencias sobre la parada más cercana.\nParada cercana\nTu parada más cercana es Plaza España (0 m).\nUsar mi ubicación\nVer mapa de paradas\n‹ Sentidos\nCambiar línea\nLínea 1\nA Plaza España\n9905 · Centro Educativo Cortadura\n>\n1114 · Cortadura (Vuelta)\n>\n1115 · Telegrafía (Vuelta)\n>\n1116 · Estadio (Vuelta)\n>\n1117 · Balneario - Glorieta Ana Orantes (Vuelta)\n>\n1118 · Residencia - Hospital Puerta del Mar\n>\n1119 · San José (Vuelta)\n>"
+  },
+  {
+    "case": "12-directions-after-gps",
+    "status": "FAIL",
+    "seconds": 18.3,
+    "detail": "Volver a sentidos se revierte automáticamente: Rastreo en tiempo real\nConsulta cuántos minutos faltan para tus líneas de autobús favoritas y recibe sugerencias sobre la parada más cercana.\nParada cercana\nTu parada más cercana es Plaza España (0 m).\nUsar mi ubicación\nVer mapa de paradas\n‹ Sentidos\nCambiar línea\nLínea 1\nA Plaza España\n9905 · Centro Educativo Cortadura\n>\n1114 · Cortadura (Vuelta)\n>\n1115 · Telegrafía (Vuelta)\n>\n1116 · Estadio (Vuelta)\n>\n1117 · Balneario - Glorieta Ana Orantes (Vuelta)\n>\n1118 · Residencia - Hospital Puerta del Mar\n>\n1119 · San José (Vuelta)\n>"
+  },
+  {
+    "case": "13-far-from-cadiz",
+    "status": "PASS",
+    "seconds": 11.6,
+    "detail": "OBSERVACIÓN: Tu parada más cercana es República Argentina (486.7 km)."
+  },
+  {
+    "case": "14-gps-disabled",
+    "status": "PASS",
+    "seconds": 24.4,
+    "detail": "Rastreo en tiempo real\nConsulta cuántos minutos faltan para tus líneas de autobús favoritas y recibe sugerencias sobre la parada más cercana.\nParada cercana\nNo se pudo obtener tu ubicación. Inténtalo de nuevo más tarde.\nNo se pudo obtener la ubicación actual.\nUsar mi ubicación\nVer mapa de paradas\nSelecciona una línea\nLínea 1\nToca para elegir sentido\nLínea 2\nToca para elegir sentido\nLínea 3\nToca para elegir sentido\nLínea 5\nToca para elegir sentido\nLínea 7"
+  },
+  {
+    "case": "15-offline-arrivals",
+    "status": "FAIL",
+    "seconds": 12.9,
+    "detail": "Sin red no se informa error; la UI muestra: Rastreo en tiempo real\nConsulta cuántos minutos faltan para tus líneas de autobús favoritas y recibe sugerencias sobre la parada más cercana.\nParada cercana\nPermite el acceso a la ubicación para sugerirte la parada más cercana.\nUsar mi ubicación\nVer mapa de paradas\nSin datos de llegada\nAún no tenemos información de espera. Actualiza en unos segundos.\nÚltima actualización: 11:22:10 PM"
+  },
+  {
+    "case": "16-offline-map",
+    "status": "PASS",
+    "seconds": 23.0,
+    "detail": "Verificación visual manual de 16-offline-map.png: teselas de Cádiz, marcadores y atribución Leaflet/OSM visibles sin red desde caché. La ausencia de nodos WebView en UIAutomator era un falso positivo.",
+    "verification": "manual-screenshot"
+  },
+  {
+    "case": "17-network-recovery",
+    "status": "PASS",
+    "seconds": 12.5,
+    "detail": "La app vuelve a cargar las líneas con llegadas tras recuperar red."
+  },
+  {
+    "case": "18-landscape",
+    "status": "PASS",
+    "seconds": 21.2,
+    "detail": "En horizontal se puede abrir/cerrar el mapa."
+  },
+  {
+    "case": "19-large-font",
+    "status": "PASS",
+    "seconds": 15.4,
+    "detail": "Fuente 150%: controles principales accesibles por desplazamiento."
+  },
+  {
+    "case": "20-permission-deny",
+    "status": "PASS",
+    "seconds": 11.4,
+    "detail": "Denegación explícita muestra error y libera el botón."
+  },
+  {
+    "case": "21-permission-approximate",
+    "status": "FAIL",
+    "seconds": 37.9,
+    "detail": "No aparece 'Tu parada más cercana' en 20s. Pantalla: Rastreo en tiempo real\nConsulta cuántos minutos faltan para tus líneas de autobús favoritas y recibe sugerencias sobre la parada más cercana.\nParada cercana\nActiva los permisos de ubicación para detectar tu parada cercana.\nLa ubicación está bloqueada. Activa los permisos manualmente en los ajustes.\nUsar mi ubicación\nVer mapa de paradas\nSelecciona una línea\nLínea 1\nToca para elegir sentido\nLínea 2\nToca para elegir sentido\nLínea 3\nToca para elegir sentido\nLínea 5\nToca para elegir sentido\nLínea 7"
+  },
+  {
+    "case": "22-permission-recovery",
+    "status": "PASS",
+    "seconds": 11.6,
+    "detail": "La ubicación funciona tras restaurar el permiso preciso."
+  },
+  {
+    "case": "23-map-without-permissions",
+    "status": "PASS",
+    "seconds": 17.7,
+    "detail": "El mapa abre/cierra sin permiso de ubicación y no provoca cierre de la app."
+  },
+  {
+    "case": "24-background-resume",
+    "status": "PASS",
+    "seconds": 14.6,
+    "detail": "Volver de segundo plano conserva el modal y permite cerrarlo."
+  },
+  {
+    "case": "25-gps-scroll-target",
+    "status": "FAIL",
+    "seconds": 16.7,
+    "detail": "Se detecta Plaza España, pero la lista no desplaza hasta la parada seleccionada: Rastreo en tiempo real\nConsulta cuántos minutos faltan para tus líneas de autobús favoritas y recibe sugerencias sobre la parada más cercana.\nParada cercana\nTu parada más cercana es Plaza España (0 m).\nUsar mi ubicación\nVer mapa de paradas\n‹ Sentidos\nCambiar línea\nLínea 1\nA Plaza España\n9905 · Centro Educativo Cortadura\n>\n1114 · Cortadura (Vuelta)\n>\n1115 · Telegrafía (Vuelta)\n>\n1116 · Estadio (Vuelta)\n>\n1117 · Balneario - Glorieta Ana Orantes (Vuelta)\n>\n1118 · Residencia - Hospital Puerta del Mar\n>\n1119 · San José (Vuelta)\n>"
+  }
+]

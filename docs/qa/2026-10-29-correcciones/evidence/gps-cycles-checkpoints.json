@@ -1,0 +1,77 @@
+[
+  {
+    "cycle": 1,
+    "step": 1,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "cycle": 1,
+    "step": 2,
+    "nearest": "Tu parada más cercana es Residencia - Hospital Puerta del Mar (0 m)."
+  },
+  {
+    "cycle": 1,
+    "step": 3,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "cycle": 2,
+    "step": 1,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "cycle": 2,
+    "step": 2,
+    "nearest": "Tu parada más cercana es Residencia - Hospital Puerta del Mar (0 m)."
+  },
+  {
+    "cycle": 2,
+    "step": 3,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "cycle": 3,
+    "step": 1,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "cycle": 3,
+    "step": 2,
+    "nearest": "Tu parada más cercana es Residencia - Hospital Puerta del Mar (0 m)."
+  },
+  {
+    "cycle": 3,
+    "step": 3,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "cycle": 4,
+    "step": 1,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "cycle": 4,
+    "step": 2,
+    "nearest": "Tu parada más cercana es Residencia - Hospital Puerta del Mar (0 m)."
+  },
+  {
+    "cycle": 4,
+    "step": 3,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "cycle": 5,
+    "step": 1,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  },
+  {
+    "cycle": 5,
+    "step": 2,
+    "nearest": "Tu parada más cercana es Residencia - Hospital Puerta del Mar (0 m)."
+  },
+  {
+    "cycle": 5,
+    "step": 3,
+    "nearest": "Tu parada más cercana es Plaza España (0 m)."
+  }
+]

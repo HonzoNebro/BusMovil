@@ -7,9 +7,11 @@ export interface BusStopArrival {
   configuredLine: string;
   destination: string;
   arrivalInMinutes: number;
+  observedAt: string;
 }
 
 export interface BusDataSnapshot {
   arrivals: BusStopArrival[];
   generatedAt: string;
+  failedStopIds: string[];
 }

@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "cityStopCount": 124,
+  "checks": [
+    "Una agrupación lejana con recuento real",
+    "Tocar grupo centra y no abre ficha",
+    "Ampliar subdivide en grupos menores"
+  ],
+  "visualReview": "REVIEW: confirmar zoom constante al centrar y fichas individuales",
+  "manualReview": {
+    "status": "PASS",
+    "evidence": [
+      "grupo-ciudad.png",
+      "grupo-centrado.png",
+      "subdivision-grupos.png",
+      "paradas-cercanas.png",
+      "ficha-cargada.png",
+      "menu-favoritos.png"
+    ],
+    "detail": "Mismo zoom al centrar el grupo, subdivisión visible, paradas individuales, minimapa, destinos y llegadas reales. Enlace oficial secundario visible en el menú."
+  }
+}

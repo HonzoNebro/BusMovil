@@ -1,10 +1,10 @@
 module.exports = {
   root: true,
   env: {
-    browser: true,
-    es2021: true
+    es2021: true,
+    node: true
   },
-  extends: ['expo', 'plugin:react/recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
+  extends: ['plugin:react/recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {

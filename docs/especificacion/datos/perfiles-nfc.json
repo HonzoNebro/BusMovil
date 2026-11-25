@@ -1,0 +1,30 @@
+{
+  "notice": "Configuración de compatibilidad de tarjetas del usuario. La aplicación no incorpora operaciones de escritura; no se afirma que las claves limiten por hardware el acceso a lectura.",
+  "urban": {
+    "id": "bonobus-cadiz",
+    "identity": {
+      "sector": 0,
+      "keyType": "A",
+      "keyHex": "0172066B2F03"
+    },
+    "balance": {
+      "sector": 4,
+      "keyType": "B",
+      "keyHex": "2F130172066B",
+      "block": 16,
+      "format": "int32 little-endian, cents",
+      "divisor": 100
+    }
+  },
+  "consortium": {
+    "id": "ctan",
+    "balance": {
+      "sector": 9,
+      "keyType": "A",
+      "keyHex": "99100225D83B",
+      "block": 37,
+      "format": "MIFARE value block, int32 little-endian",
+      "divisor": 200
+    }
+  }
+}

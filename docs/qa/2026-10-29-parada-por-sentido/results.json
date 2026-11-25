@@ -1,0 +1,7 @@
+{
+  "startup": true,
+  "line3Puntales": "PASS: parada 1301 automática",
+  "walking": true,
+  "noMismatchMessage": true,
+  "offlineFallback": "PASS: selección automática con distancia recta y aviso"
+}

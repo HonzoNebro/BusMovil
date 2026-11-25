@@ -1,0 +1,18 @@
+{
+  "startupGPS1123": "PASS",
+  "routeRevealAndDock": "PASS",
+  "historicalErrorStatus": "PASS",
+  "automaticRecoveryWithoutInteraction": "En directo ↻",
+  "nativeTimetables": "PASS",
+  "visualReview": {
+    "status": "PASS",
+    "evidence": [
+      "inicio-1123.png",
+      "recorrido-parada-visible.png",
+      "error-naranja.png",
+      "recuperacion-automatica.png",
+      "tabla-nativa-frecuencias.png",
+      "tabla-nativa-salidas.png"
+    ]
+  }
+}

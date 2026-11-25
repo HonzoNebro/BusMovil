@@ -1,0 +1,19 @@
+{
+  "favoritesPersistence": "PASS",
+  "hardwareBack": "PASS",
+  "detailMiniMap": "PASS",
+  "clustersAndZoom": "REVIEW: capturas",
+  "secondaryOfficialPlan": "REVIEW: menú",
+  "manualReview": {
+    "status": "PASS",
+    "evidence": [
+      "grupo-ciudad.png",
+      "grupo-centrado.png",
+      "subdivision-grupos.png",
+      "paradas-cercanas.png",
+      "ficha-cargada.png",
+      "menu-favoritos.png"
+    ],
+    "detail": "Mismo zoom al centrar el grupo, subdivisión visible, paradas individuales, minimapa, destinos y llegadas reales. Enlace oficial secundario visible en el menú."
+  }
+}

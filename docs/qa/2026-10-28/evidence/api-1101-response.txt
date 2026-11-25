@@ -1,0 +1,20 @@
+[
+{
+"iIdLinea": " 1",
+"iMinHastaPaso": "1",
+"sParadaDestino": "CORTADURA",
+"sSalida": "1min",
+},
+{
+"iIdLinea": " 1",
+"iMinHastaPaso": "15",
+"sParadaDestino": "CORTADURA",
+"sSalida": "15min",
+},
+{
+"iIdLinea": " 1",
+"iMinHastaPaso": "31",
+"sParadaDestino": "CORTADURA",
+"sSalida": "23:47",
+},
+]

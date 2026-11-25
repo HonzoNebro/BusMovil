@@ -1,4 +1,31 @@
-const BASE_URL = process.env.EXPO_PUBLIC_PROXY_URL ?? 'http://77.224.241.76/urbanos';
+import type { BusDataSnapshot, BusStopArrival } from '@/types/bus';
+
+// React Native CLI does not inject Expo environment variables.
+const BASE_URL = 'http://77.224.241.76/urbanos';
+
+export interface StopConfig {
+  stopId: string;
+  label: string;
+  latitude?: number | null;
+  longitude?: number | null;
+}
+
+export interface LineConfig {
+  line: string;
+  directions: { id: string; name: string; stops: StopConfig[] }[];
+}
+
+export interface FavouriteStop extends StopConfig {
+  line: string;
+  directionId: string;
+  directionName: string;
+}
+
+interface PresenterArrivalRaw {
+  iMinHastaPaso: string;
+  iIdLinea: string;
+  sParadaDestino: string;
+}
 
 const STOP_LABELS: Record<string, string> = {
   '1101': 'Plaza España',
@@ -12,21 +39,21 @@ const STOP_LABELS: Record<string, string> = {
   '1109': 'Residencia - Hospital Puerta del Mar',
   '1110': 'Balneario - Glorieta Ana Orantes',
   '1111': 'Estadio',
-  '1112': 'Telegrafía',
-  '1113': 'Cortadura (Ida)',
+  '1112': 'Telegrafía (Vuelta)',
+  '1113': 'Cortadura',
   '1114': 'Cortadura (Vuelta)',
-  '1115': 'Telegrafía',
-  '1116': 'Estadio',
-  '1117': 'Balneario - Glorieta Ana Orantes',
+  '1115': 'Telegrafía (Vuelta)',
+  '1116': 'Estadio (Vuelta)',
+  '1117': 'Balneario - Glorieta Ana Orantes (Vuelta)',
   '1118': 'Residencia - Hospital Puerta del Mar',
-  '1119': 'San José',
-  '1120': 'San Felipe',
-  '1121': 'Plaza Asdrúbal - Mercado Virgen del Rosario',
-  '1122': 'Comisaría - Avenida de Andalucía 45',
-  '1123': 'Avenida de Andalucía',
-  '1124': 'Puertas de Tierra',
+  '1119': 'San José (Vuelta)',
+  '1120': 'San Felipe (Vuelta)',
+  '1121': 'Plaza Asdrúbal - Mercado Virgen del Rosario (Vuelta)',
+  '1122': 'Comisaría - Avenida de Andalucía 45 (Vuelta)',
+  '1123': 'Avenida de Andalucía (Vuelta)',
+  '1124': 'Puertas de Tierra (Vuelta)',
   '1125': 'Renfe - Cuesta de Las Calesas',
-  '1126': 'Avenida del Puerto',
+  '1126': 'Avenida del Puerto (Vuelta)',
   '1201': 'Plaza España',
   '1202': 'República Argentina',
   '1203': 'Alameda Clara Campoamor',
@@ -128,132 +155,132 @@ const STOP_LABELS: Record<string, string> = {
   '9905': 'Centro Educativo Cortadura',
 };
 
-const STOP_COORDINATES: Partial<Record<string, { latitude: number; longitude: number }>> = {
-  '1101': { latitude: 36.533504, longitude: -6.295246 },
-  '1102': { latitude: 36.52925, longitude: -6.28974 },
-  '1103': { latitude: 36.52716, longitude: -6.28875 },
-  '1104': { latitude: 36.52439, longitude: -6.28711 },
-  '1105': { latitude: 36.52097, longitude: -6.28517 },
-  '1106': { latitude: 36.51781, longitude: -6.28335 },
-  '1107': { latitude: 36.51556, longitude: -6.28210 },
-  '1108': { latitude: 36.51231, longitude: -6.28024 },
-  '1109': { latitude: 36.50920, longitude: -6.27847 },
-  '1110': { latitude: 36.50644, longitude: -6.27694 },
-  '1111': { latitude: null, longitude: null },
-  '1112': { latitude: 36.50222, longitude: -6.27444 },
-  '1113': { latitude: null, longitude: null },
-  '1114': { latitude: 36.497950, longitude: -6.271970 },
-  '1115': { latitude: null, longitude: null },
-  '1116': { latitude: null, longitude: null },
-  '1117': { latitude: 36.528847, longitude: -6.299043 },
-  '1118': { latitude: null, longitude: null },
-  '1119': { latitude: null, longitude: null },
-  '1120': { latitude: null, longitude: null },
-  '1121': { latitude: null, longitude: null },
-  '1122': { latitude: null, longitude: null },
-  '1123': { latitude: null, longitude: null },
-  '1124': { latitude: null, longitude: null },
-  '1125': { latitude: null, longitude: null },
-  '1126': { latitude: null, longitude: null },
-  '1201': { latitude: 36.531921, longitude: -6.291874 },
-  '1202': { latitude: null, longitude: null },
-  '1203': { latitude: null, longitude: null },
-  '1204': { latitude: null, longitude: null },
-  '1205': { latitude: null, longitude: null },
-  '1206': { latitude: null, longitude: null },
-  '1207': { latitude: null, longitude: null },
-  '1208': { latitude: null, longitude: null },
-  '1209': { latitude: null, longitude: null },
-  '1210': { latitude: null, longitude: null },
-  '1211': { latitude: null, longitude: null },
-  '1212': { latitude: null, longitude: null },
-  '1213': { latitude: null, longitude: null },
-  '1214': { latitude: null, longitude: null },
-  '1215': { latitude: null, longitude: null },
-  '1216': { latitude: null, longitude: null },
-  '1217': { latitude: null, longitude: null },
-  '1218': { latitude: null, longitude: null },
-  '1219': { latitude: null, longitude: null },
-  '1220': { latitude: null, longitude: null },
-  '1221': { latitude: null, longitude: null },
-  '1222': { latitude: null, longitude: null },
-  '1223': { latitude: null, longitude: null },
-  '1224': { latitude: null, longitude: null },
-  '1225': { latitude: null, longitude: null },
-  '1226': { latitude: null, longitude: null },
-  '1227': { latitude: null, longitude: null },
-  '1228': { latitude: null, longitude: null },
-  '1229': { latitude: null, longitude: null },
-  '1230': { latitude: null, longitude: null },
-  '1231': { latitude: null, longitude: null },
-  '1232': { latitude: null, longitude: null },
-  '1233': { latitude: null, longitude: null },
-  '1234': { latitude: null, longitude: null },
-  '1235': { latitude: null, longitude: null },
-  '1236': { latitude: null, longitude: null },
-  '1237': { latitude: null, longitude: null },
-  '1238': { latitude: null, longitude: null },
-  '1239': { latitude: null, longitude: null },
-  '1240': { latitude: null, longitude: null },
-  '1241': { latitude: null, longitude: null },
-  '1242': { latitude: null, longitude: null },
-  '1243': { latitude: null, longitude: null },
-  '1244': { latitude: null, longitude: null },
-  '1245': { latitude: null, longitude: null },
-  '1301': { latitude: 36.527548, longitude: -6.284749 },
-  '1302': { latitude: null, longitude: null },
-  '1303': { latitude: null, longitude: null },
-  '1304': { latitude: null, longitude: null },
-  '1305': { latitude: null, longitude: null },
-  '1306': { latitude: null, longitude: null },
-  '1307': { latitude: null, longitude: null },
-  '1308': { latitude: null, longitude: null },
-  '1309': { latitude: null, longitude: null },
+const STOP_COORDINATES: Partial<Record<string, { latitude: number | null; longitude: number | null }>> = {
+  '1101': { latitude: 36.534149, longitude: -6.292969 },
+  '1102': { latitude: 36.530329, longitude: -6.291148 },
+  '1103': { latitude: 36.526890, longitude: -6.289099 },
+  '1104': { latitude: 36.524088, longitude: -6.287125 },
+  '1105': { latitude: 36.520876, longitude: -6.285322 },
+  '1106': { latitude: 36.517423, longitude: -6.283439 },
+  '1107': { latitude: 36.515435, longitude: -6.282232 },
+  '1108': { latitude: 36.511947, longitude: -6.280231 },
+  '1109': { latitude: 36.509067, longitude: -6.278601 },
+  '1110': { latitude: 36.506355, longitude: -6.277075 },
+  '1111': { latitude: 36.501845, longitude: -6.274419 },
+  '1112': { latitude: 36.499833, longitude: -6.273317 },
+  '1113': { latitude: 36.497011, longitude: -6.271750 },
+  '1114': { latitude: 36.498002, longitude: -6.272011 },
+  '1115': { latitude: 36.500292, longitude: -6.273338 },
+  '1116': { latitude: 36.502220, longitude: -6.274459 },
+  '1117': { latitude: 36.506402, longitude: -6.276906 },
+  '1118': { latitude: 36.509192, longitude: -6.278472 },
+  '1119': { latitude: 36.512331, longitude: -6.280229 },
+  '1120': { latitude: 36.515534, longitude: -6.282093 },
+  '1121': { latitude: 36.517804, longitude: -6.283331 },
+  '1122': { latitude: 36.521007, longitude: -6.285210 },
+  '1123': { latitude: 36.524525, longitude: -6.287197 },
+  '1124': { latitude: 36.527237, longitude: -6.288753 },
+  '1125': { latitude: 36.529269, longitude: -6.289697 },
+  '1126': { latitude: 36.531806, longitude: -6.292288 },
+  '1201': { latitude: 36.534851, longitude: -6.292135 },
+  '1202': { latitude: 36.536243, longitude: -6.291588 },
+  '1203': { latitude: 36.536578, longitude: -6.295023 },
+  '1204': { latitude: 36.537133, longitude: -6.298956 },
+  '1205': { latitude: 36.536446, longitude: -6.302735 },
+  '1206': { latitude: 36.534217, longitude: -6.305385 },
+  '1207': { latitude: 36.531560, longitude: -6.305565 },
+  '1208': { latitude: 36.527961, longitude: -6.303502 },
+  '1209': { latitude: 36.528310, longitude: -6.300898 },
+  '1210': { latitude: 36.528808, longitude: -6.298049 },
+  '1211': { latitude: 36.527618, longitude: -6.292672 },
+  '1212': { latitude: 36.526122, longitude: -6.289228 },
+  '1213': { latitude: 36.524958, longitude: -6.286411 },
+  '1214': { latitude: 36.522010, longitude: -6.284169 },
+  '1215': { latitude: 36.521018, longitude: -6.281905 },
+  '1216': { latitude: 36.519659, longitude: -6.280190 },
+  '1217': { latitude: 36.517358, longitude: -6.279057 },
+  '1218': { latitude: 36.514663, longitude: -6.277602 },
+  '1219': { latitude: 36.511344, longitude: -6.276063 },
+  '1220': { latitude: 36.508748, longitude: -6.276053 },
+  '1221': { latitude: 36.507403, longitude: -6.271691 },
+  '1222': { latitude: 36.506236, longitude: -6.268105 },
+  '1223': { latitude: 36.504203, longitude: -6.269878 },
+  '1224': { latitude: 36.506271, longitude: -6.268005 },
+  '1225': { latitude: 36.509324, longitude: -6.272330 },
+  '1226': { latitude: 36.509356, longitude: -6.274717 },
+  '1227': { latitude: 36.511809, longitude: -6.276117 },
+  '1228': { latitude: 36.514854, longitude: -6.277502 },
+  '1229': { latitude: 36.518281, longitude: -6.278831 },
+  '1230': { latitude: 36.520264, longitude: -6.279802 },
+  '1231': { latitude: 36.521156, longitude: -6.281135 },
+  '1232': { latitude: 36.522202, longitude: -6.283018 },
+  '1233': { latitude: 36.522803, longitude: -6.285553 },
+  '1234': { latitude: 36.526359, longitude: -6.289968 },
+  '1235': { latitude: 36.527939, longitude: -6.293440 },
+  '1236': { latitude: 36.528784, longitude: -6.296183 },
+  '1237': { latitude: 36.528748, longitude: -6.298903 },
+  '1238': { latitude: 36.528327, longitude: -6.301209 },
+  '1239': { latitude: 36.528041, longitude: -6.303325 },
+  '1240': { latitude: 36.531497, longitude: -6.305383 },
+  '1241': { latitude: 36.534450, longitude: -6.304889 },
+  '1242': { latitude: 36.536768, longitude: -6.302102 },
+  '1243': { latitude: 36.537422, longitude: -6.299629 },
+  '1244': { latitude: 36.536504, longitude: -6.294718 },
+  '1245': { latitude: 36.536058, longitude: -6.291781 },
+  '1301': { latitude: 36.533914, longitude: -6.292995 },
+  '1302': { latitude: 36.520415, longitude: -6.278740 },
+  '1303': { latitude: 36.519089, longitude: -6.277109 },
+  '1304': { latitude: 36.517662, longitude: -6.275369 },
+  '1305': { latitude: 36.514478, longitude: -6.273553 },
+  '1306': { latitude: 36.512318, longitude: -6.272582 },
+  '1307': { latitude: 36.510917, longitude: -6.272475 },
+  '1308': { latitude: 36.509382, longitude: -6.272475 },
+  '1309': { latitude: 36.507071, longitude: -6.270018 },
   '1310': { latitude: null, longitude: null },
-  '1311': { latitude: null, longitude: null },
-  '1312': { latitude: null, longitude: null },
-  '1313': { latitude: null, longitude: null },
-  '1314': { latitude: null, longitude: null },
-  '1315': { latitude: null, longitude: null },
-  '1316': { latitude: null, longitude: null },
-  '1317': { latitude: null, longitude: null },
-  '1318': { latitude: null, longitude: null },
-  '1319': { latitude: null, longitude: null },
-  '1501': { latitude: 36.532775, longitude: -6.299891 },
-  '1502': { latitude: null, longitude: null },
-  '1503': { latitude: null, longitude: null },
-  '1504': { latitude: null, longitude: null },
-  '1505': { latitude: null, longitude: null },
-  '1506': { latitude: null, longitude: null },
-  '1507': { latitude: null, longitude: null },
-  '1508': { latitude: null, longitude: null },
-  '1509': { latitude: null, longitude: null },
-  '1510': { latitude: null, longitude: null },
-  '1511': { latitude: null, longitude: null },
-  '1512': { latitude: null, longitude: null },
-  '1513': { latitude: null, longitude: null },
-  '1514': { latitude: null, longitude: null },
-  '1515': { latitude: null, longitude: null },
-  '1516': { latitude: null, longitude: null },
-  '1517': { latitude: null, longitude: null },
-  '1518': { latitude: null, longitude: null },
-  '1519': { latitude: null, longitude: null },
-  '1520': { latitude: null, longitude: null },
-  '1521': { latitude: null, longitude: null },
-  '1522': { latitude: null, longitude: null },
-  '1523': { latitude: null, longitude: null },
-  '1524': { latitude: null, longitude: null },
-  '1525': { latitude: null, longitude: null },
-  '1526': { latitude: null, longitude: null },
-  '1707': { latitude: null, longitude: null },
-  '1708': { latitude: null, longitude: null },
-  '1709': { latitude: null, longitude: null },
-  '1710': { latitude: null, longitude: null },
-  '1711': { latitude: null, longitude: null },
-  '1712': { latitude: null, longitude: null },
-  '1713': { latitude: null, longitude: null },
-  '1901': { latitude: null, longitude: null },
-  '9905': { latitude: null, longitude: null },
+  '1311': { latitude: 36.507185, longitude: -6.270361 },
+  '1312': { latitude: 36.510802, longitude: -6.272410 },
+  '1313': { latitude: 36.512650, longitude: -6.272603 },
+  '1314': { latitude: 36.515005, longitude: -6.273667 },
+  '1315': { latitude: 36.518136, longitude: -6.275779 },
+  '1316': { latitude: 36.519456, longitude: -6.277384 },
+  '1317': { latitude: 36.520771, longitude: -6.279033 },
+  '1318': { latitude: 36.507832, longitude: -6.268054 },
+  '1319': { latitude: 36.507435, longitude: -6.268392 },
+  '1501': { latitude: 36.534345, longitude: -6.293104 },
+  '1502': { latitude: 36.530327, longitude: -6.291145 },
+  '1503': { latitude: 36.529949, longitude: -6.289143 },
+  '1504': { latitude: 36.527452, longitude: -6.285097 },
+  '1505': { latitude: 36.522721, longitude: -6.278842 },
+  '1506': { latitude: 36.521971, longitude: -6.277260 },
+  '1507': { latitude: 36.520518, longitude: -6.276517 },
+  '1508': { latitude: 36.507066, longitude: -6.274073 },
+  '1509': { latitude: 36.505277, longitude: -6.273236 },
+  '1510': { latitude: 36.501819, longitude: -6.271638 },
+  '1511': { latitude: 36.499831, longitude: -6.269229 },
+  '1512': { latitude: 36.500046, longitude: -6.266005 },
+  '1513': { latitude: 36.497194, longitude: -6.264688 },
+  '1514': { latitude: 36.498735, longitude: -6.259375 },
+  '1515': { latitude: 36.495264, longitude: -6.265501 },
+  '1516': { latitude: 36.494561, longitude: -6.265903 },
+  '1517': { latitude: 36.495061, longitude: -6.266456 },
+  '1518': { latitude: 36.498149, longitude: -6.267271 },
+  '1519': { latitude: 36.501482, longitude: -6.269647 },
+  '1520': { latitude: 36.504932, longitude: -6.272888 },
+  '1521': { latitude: 36.508515, longitude: -6.274524 },
+  '1522': { latitude: 36.520130, longitude: -6.276879 },
+  '1523': { latitude: 36.522058, longitude: -6.277093 },
+  '1524': { latitude: 36.523325, longitude: -6.279700 },
+  '1525': { latitude: 36.527456, longitude: -6.284941 },
+  '1526': { latitude: 36.530104, longitude: -6.289014 },
+  '1707': { latitude: 36.533280, longitude: -6.306083 },
+  '1708': { latitude: 36.524243, longitude: -6.288847 },
+  '1709': { latitude: 36.520742, longitude: -6.286497 },
+  '1710': { latitude: 36.517632, longitude: -6.285878 },
+  '1711': { latitude: 36.513898, longitude: -6.283670 },
+  '1712': { latitude: 36.509610, longitude: -6.280832 },
+  '1713': { latitude: 36.507515, longitude: -6.279577 },
+  '1901': { latitude: 36.498270, longitude: -6.271868 },
+  '9905': { latitude: 36.493496, longitude: -6.269304 },
   // Reemplaza null con latitud/longitud reales cuando las tengas
 };
 
@@ -401,7 +428,7 @@ const CADIZ_LINE_CONFIG: LineConfig[] = [
         id: '3-plaza-espana',
         name: 'A Plaza España',
         stops: createStops([
-          '1310',
+          '1318',
           '1319',
           '1311',
           '1225',
@@ -439,8 +466,7 @@ const CADIZ_LINE_CONFIG: LineConfig[] = [
           '1307',
           '1308',
           '1309',
-          '1318',
-          '1310'
+          '1318'
         ])
       }
     ]
@@ -586,18 +612,22 @@ function sanitisePresenterPayload(payload: string): string {
 
 async function fetchPresenterList<T>(query: string, params: Record<string, string>): Promise<T> {
   const queryString = buildQuery({ query, ...params, lang: 'es-ES' });
-  const response = await fetch(`${BASE_URL}/Presenter.aspx?${queryString}`);
-
-  if (!response.ok) {
-    throw new Error(`Error al consultar Presenter.aspx (${response.status})`);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await fetch(`${BASE_URL}/Presenter.aspx?${queryString}`, {
+      signal: controller.signal
+    });
+    if (!response.ok) {
+      throw new Error(`Error al consultar Presenter.aspx (${response.status})`);
+    }
+    return JSON.parse(sanitisePresenterPayload(await response.text())) as T;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const raw = await response.text();
-  const sanitised = sanitisePresenterPayload(raw);
-  return JSON.parse(sanitised) as T;
 }
 
-function toArrival(stop: FavouriteStop, raw: PresenterArrivalRaw): BusStopArrival | null {
+function toArrival(stop: FavouriteStop, raw: PresenterArrivalRaw, observedAt: string): BusStopArrival | null {
   const rawMinutes = raw.iMinHastaPaso.trim();
   const minutes = rawMinutes === '>>' ? 0 : Number.parseInt(rawMinutes, 10);
   if (!Number.isFinite(minutes)) {
@@ -612,36 +642,37 @@ function toArrival(stop: FavouriteStop, raw: PresenterArrivalRaw): BusStopArriva
     directionName: stop.directionName,
     configuredLine: stop.line,
     destination: raw.sParadaDestino.trim(),
-    arrivalInMinutes: minutes
+    arrivalInMinutes: minutes,
+    observedAt
   };
 }
 
-async function fetchArrivalEstimates(): Promise<BusStopArrival[]> {
-  const arrivalsByStop = await Promise.all(
-    FAVOURITE_STOPS.map(async (stop) => {
-      try {
-        const arrivals = await fetchPresenterList<PresenterArrivalRaw[]>('lcdentries', {
-          busstop: stop.stopId
-        });
-
-        return arrivals
-          .map((arrival) => toArrival(stop, arrival))
-          .filter((item): item is BusStopArrival => item !== null);
-      } catch (error) {
-        console.warn(`No se pudieron obtener llegadas para la parada ${stop.stopId}`, error);
-        return [] as BusStopArrival[];
-      }
-    })
-  );
-
-  return arrivalsByStop.flat().sort((a, b) => a.arrivalInMinutes - b.arrivalInMinutes);
-}
-
 export async function fetchBusData(): Promise<BusDataSnapshot> {
-  const arrivals = await fetchArrivalEstimates();
-
+  // Query each physical stop once, then attach the configured line/direction metadata.
+  const stopIds = [...new Set(FAVOURITE_STOPS.map((stop) => stop.stopId))];
+  const outcomes = await Promise.all(stopIds.map(async (stopId) => {
+    try {
+      const raw = await fetchPresenterList<PresenterArrivalRaw[]>('lcdentries', { busstop: stopId });
+      if (!Array.isArray(raw)) throw new Error('Respuesta de llegadas no válida');
+      const observedAt = new Date().toISOString();
+      const arrivals = FAVOURITE_STOPS.filter((stop) => stop.stopId === stopId).flatMap((stop) =>
+        raw.map((arrival) => toArrival(stop, arrival, observedAt))
+          .filter((arrival): arrival is BusStopArrival => arrival !== null)
+      );
+      return { stopId, arrivals, failed: false };
+    } catch (error) {
+      console.warn(`No se pudieron obtener llegadas para la parada ${stopId}`, error);
+      return { stopId, arrivals: [] as BusStopArrival[], failed: true };
+    }
+  }));
+  const failedStopIds = outcomes.filter((result) => result.failed).map((result) => result.stopId);
+  if (stopIds.length && failedStopIds.length === stopIds.length) {
+    throw new Error('No se pudieron consultar las llegadas. Comprueba la conexión y reintenta.');
+  }
   return {
-    arrivals,
-    generatedAt: new Date().toISOString()
+    arrivals: outcomes.flatMap((result) => result.arrivals)
+      .sort((a, b) => a.arrivalInMinutes - b.arrivalInMinutes),
+    generatedAt: new Date().toISOString(),
+    failedStopIds
   };
 }
